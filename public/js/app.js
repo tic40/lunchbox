@@ -63,17 +63,496 @@
 /******/ 	__webpack_require__.p = "./";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 39);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(40);
+
+//Vue.component('example', require('./components/Example.vue'));
+/*
+const app = new Vue({
+    el: '#app'
+});
+*/
+
+Vue.component('modal', __webpack_require__(43));
+
+// constants
+var viewType = {
+    list: 1,
+    create: 2,
+    edit: 3,
+    delete: 4
+};
+
+// API
+function fetch(url) {
+    return new Promise(function (resolve, reject) {
+        axios.get(url).then(function (response) {
+            resolve(response.data);
+        }).catch(function (e) {
+            reject(e);
+        });
+    });
+}
+function post(url, request) {
+    return new Promise(function (resolve, reject) {
+        axios.post(url, request).then(function (response) {
+            resolve(response.data);
+        }).catch(function (e) {
+            reject(e);
+        });
+    });
+}
+function put(url, request) {
+    return new Promise(function (resolve, reject) {
+        axios.put(url, request).then(function (response) {
+            resolve(response.data);
+        }).catch(function (e) {
+            reject(e);
+        });
+    });
+}
+function destroy(url) {
+    return new Promise(function (resolve, reject) {
+        axios.delete(url).then(function (response) {
+            resolve(response.data);
+        }).catch(function (e) {
+            reject(e);
+        });
+    });
+}
+
+function checkAuth() {
+    return fetch('api/auth');
+}
+function getEmployees() {
+    return fetch('api/employee/list');
+}
+function createEmployee(request) {
+    return post('api/employee', request);
+}
+function updateEmployee(id, request) {
+    return put('api/employee/' + id, request);
+}
+function destroyEmployee(id, request) {
+    return destroy('api/employee/' + id, request);
+}
+
+function getDepartments() {
+    return fetch('api/department/list');
+}
+function createDepartment(request) {
+    return post('api/department', request);
+}
+function updateDepartment(id, request) {
+    return put('api/department/' + id, request);
+}
+function destroyDepartment(id, request) {
+    return destroy('api/department/' + id, request);
+}
+
+function getPositions() {
+    return fetch('api/position/list');
+}
+function createPosition(request) {
+    return post('api/position', request);
+}
+function updatePosition(id, request) {
+    return put('api/position/' + id, request);
+}
+function destroyPosition(id, request) {
+    return destroy('api/position/' + id, request);
+}
+
+function getGroupList(year, month) {
+    return fetch('api/group/' + year + '/' + month + '/list');
+}
+function getGenerateGroup(year, month) {
+    return fetch('api/group/' + year + '/' + month + '/create');
+}
+
+/**
+ * employee
+ */
+if (document.querySelector('#employee')) {
+
+    var employee = new Vue({
+        el: '#employee',
+        data: {
+            isLogin: 0,
+            viewType: viewType,
+            currentView: viewType.list,
+            employees: [],
+            departments: [],
+            positions: [],
+            selectedEmployee: [],
+            newEmployee: [],
+            search: {
+                name: ''
+            }
+        },
+        /*
+        components: {
+            editForm
+        },
+        */
+        mounted: function mounted() {
+            var _this = this;
+
+            checkAuth().then(function (response) {
+                _this.isLogin = response.isLogin;
+            });
+            getEmployees().then(function (response) {
+                _this.employees = response;
+            }), getDepartments().then(function (response) {
+                _this.departments = response;
+            });
+            getPositions().then(function (response) {
+                _this.positions = response;
+            });
+        },
+
+        methods: {
+            setSelectedEmployee: function setSelectedEmployee(index) {
+                this.selectedEmployee = this.employees[index];
+            },
+            searchByName: function searchByName(employees, name) {
+                if (name === undefined || name === '') {
+                    return employees;
+                }
+                return employees.filter(function (employee) {
+                    return employee.name.indexOf(name) > 0;
+                });
+            },
+            changeView: function changeView(type) {
+                var _this2 = this;
+
+                if (type == this.viewType.list) {
+                    getEmployees().then(function (response) {
+                        _this2.employees = response;
+                        _this2.currentView = type;
+                    });
+                } else {
+                    this.currentView = type;
+                }
+            },
+            clickCreate: function clickCreate(index) {
+                this.changeView(this.viewType.create);
+            },
+            clickEdit: function clickEdit(index) {
+                this.setSelectedEmployee(index);
+                this.changeView(this.viewType.edit);
+            },
+            clickDelete: function clickDelete(index) {
+                this.setSelectedEmployee(index);
+                this.changeView(this.viewType.delete);
+            },
+            submitCreate: function submitCreate(employee) {
+                var _this3 = this;
+
+                createEmployee({
+                    name: employee.name,
+                    department_id: employee.departmentId,
+                    position_id: employee.positionId
+                }).then(function (response) {
+                    _this3.changeView(_this3.viewType.list);
+                });
+            },
+            submitEdit: function submitEdit(employee) {
+                var _this4 = this;
+
+                updateEmployee(employee.id, {
+                    name: employee.name,
+                    department_id: employee.departmentId,
+                    position_id: employee.positionId
+                }).then(function (response) {
+                    _this4.changeView(_this4.viewType.list);
+                });
+            },
+            submitDelete: function submitDelete(employee) {
+                var _this5 = this;
+
+                destroyEmployee(employee.id).then(function (response) {
+                    _this5.changeView(_this5.viewType.list);
+                });
+            }
+        }
+    });
+}
+
+/**
+ * department
+ */
+if (document.querySelector('#department')) {
+
+    var department = new Vue({
+        el: '#department',
+        data: {
+            isLogin: 0,
+            viewType: viewType,
+            currentView: viewType.list,
+            departments: [],
+            selectedDepartment: [],
+            newDepartment: [],
+            search: {
+                name: ''
+            }
+        },
+        /*
+        components: {
+            editForm
+        },
+        */
+        mounted: function mounted() {
+            var _this6 = this;
+
+            checkAuth().then(function (response) {
+                _this6.isLogin = response.isLogin;
+            });
+            getDepartments().then(function (response) {
+                _this6.departments = response;
+            });
+        },
+
+        methods: {
+            setSelectedDepartment: function setSelectedDepartment(index) {
+                this.selectedDepartment = this.departments[index];
+            },
+            searchByName: function searchByName(departments, name) {
+                if (name === undefined || name === '') {
+                    return departments;
+                }
+                return departments.filter(function (department) {
+                    return department.name.indexOf(name) > 0;
+                });
+            },
+            changeView: function changeView(type) {
+                var _this7 = this;
+
+                if (type == this.viewType.list) {
+                    getDepartments().then(function (response) {
+                        _this7.departments = response;
+                        _this7.currentView = type;
+                    });
+                } else {
+                    this.currentView = type;
+                }
+            },
+            clickCreate: function clickCreate(index) {
+                this.changeView(this.viewType.create);
+            },
+            clickEdit: function clickEdit(index) {
+                this.setSelectedDepartment(index);
+                this.changeView(this.viewType.edit);
+            },
+            clickDelete: function clickDelete(index) {
+                this.setSelectedDepartment(index);
+                this.changeView(this.viewType.delete);
+            },
+            submitCreate: function submitCreate(department) {
+                var _this8 = this;
+
+                createDepartment({
+                    name: department.name
+                }).then(function (response) {
+                    _this8.changeView(_this8.viewType.list);
+                });
+            },
+            submitEdit: function submitEdit(department) {
+                var _this9 = this;
+
+                updateDepartment(department.id, {
+                    name: department.name
+                }).then(function (response) {
+                    _this9.changeView(_this9.viewType.list);
+                });
+            },
+            submitDelete: function submitDelete(department) {
+                var _this10 = this;
+
+                destroyDepartment(department.id).then(function (response) {
+                    _this10.changeView(_this10.viewType.list);
+                });
+            }
+        }
+    });
+}
+
+/**
+ * position
+ */
+if (document.querySelector('#position')) {
+
+    var position = new Vue({
+        el: '#position',
+        data: {
+            isLogin: 0,
+            viewType: viewType,
+            currentView: viewType.list,
+            positions: [],
+            selectedPosition: [],
+            newPosition: [],
+            search: {
+                name: ''
+            }
+        },
+        mounted: function mounted() {
+            var _this11 = this;
+
+            checkAuth().then(function (response) {
+                _this11.isLogin = response.isLogin;
+            });
+            getPositions().then(function (response) {
+                _this11.positions = response;
+            });
+        },
+
+        methods: {
+            setSelectedPosition: function setSelectedPosition(index) {
+                this.selectedPosition = this.positions[index];
+            },
+            searchByName: function searchByName(positions, name) {
+                if (name === undefined || name === '') {
+                    return positions;
+                }
+                return positions.filter(function (position) {
+                    return position.name.indexOf(name) > 0;
+                });
+            },
+            changeView: function changeView(type) {
+                var _this12 = this;
+
+                if (type == this.viewType.list) {
+                    getPositions().then(function (response) {
+                        _this12.positions = response;
+                        _this12.currentView = type;
+                    });
+                } else {
+                    this.currentView = type;
+                }
+            },
+            clickCreate: function clickCreate(index) {
+                this.changeView(this.viewType.create);
+            },
+            clickEdit: function clickEdit(index) {
+                this.setSelectedPosition(index);
+                this.changeView(this.viewType.edit);
+            },
+            clickDelete: function clickDelete(index) {
+                this.setSelectedPosition(index);
+                this.changeView(this.viewType.delete);
+            },
+            submitCreate: function submitCreate(position) {
+                var _this13 = this;
+
+                createPosition({
+                    name: position.name
+                }).then(function (response) {
+                    _this13.changeView(_this13.viewType.list);
+                });
+            },
+            submitEdit: function submitEdit(position) {
+                var _this14 = this;
+
+                updatePosition(position.id, {
+                    name: position.name
+                }).then(function (response) {
+                    _this14.changeView(_this14.viewType.list);
+                });
+            },
+            submitDelete: function submitDelete(position) {
+                var _this15 = this;
+
+                destroyPosition(position.id).then(function (response) {
+                    _this15.changeView(_this15.viewType.list);
+                });
+            }
+        }
+    });
+}
+
+/**
+ * group
+ */
+if (document.querySelector('#group')) {
+
+    var group = new Vue({
+        el: '#group',
+        data: {
+            isLogin: 0,
+            viewType: viewType,
+            currentView: viewType.list,
+            groupList: [],
+            date: {
+                year: '',
+                month: ''
+            }
+        },
+        mounted: function mounted() {
+            var _this16 = this;
+
+            var date = new Date();
+            this.date.year = date.getFullYear();
+            this.date.month = date.getMonth() + 1;
+
+            checkAuth().then(function (response) {
+                _this16.isLogin = response.isLogin;
+            });
+            getGroupList(this.date.year, this.date.month).then(function (response) {
+                _this16.groupList = response;
+            });
+        },
+
+        methods: {
+            clickGenerate: function clickGenerate(year, month) {
+                var _this17 = this;
+
+                getGenerateGroup(year, month).then(function (response) {
+                    _this17.groupList = response;
+                });
+            },
+            clickDelete: function clickDelete() {
+                console.log('delete');
+            }
+        }
+    });
+}
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(0);
+module.exports = __webpack_require__(1);
+
+
+/***/ }),
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
-var bind = __webpack_require__(7);
+var bind = __webpack_require__(18);
 
 /*global toString:true*/
 
@@ -373,14 +852,14 @@ module.exports = {
 
 
 /***/ }),
-/* 1 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(27);
+var utils = __webpack_require__(11);
+var normalizeHeaderName = __webpack_require__(36);
 
 var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 var DEFAULT_CONTENT_TYPE = {
@@ -397,10 +876,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(3);
+    adapter = __webpack_require__(14);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(3);
+    adapter = __webpack_require__(14);
   }
   return adapter;
 }
@@ -471,10 +950,10 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 2 */
+/* 13 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -660,19 +1139,19 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 3 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(0);
-var settle = __webpack_require__(19);
-var buildURL = __webpack_require__(22);
-var parseHeaders = __webpack_require__(28);
-var isURLSameOrigin = __webpack_require__(26);
-var createError = __webpack_require__(6);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(21);
+var utils = __webpack_require__(11);
+var settle = __webpack_require__(28);
+var buildURL = __webpack_require__(31);
+var parseHeaders = __webpack_require__(37);
+var isURLSameOrigin = __webpack_require__(35);
+var createError = __webpack_require__(17);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(30);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -768,7 +1247,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(24);
+      var cookies = __webpack_require__(33);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -842,10 +1321,10 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
 
 /***/ }),
-/* 4 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -871,7 +1350,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 5 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -883,13 +1362,13 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 6 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(18);
+var enhanceError = __webpack_require__(27);
 
 /**
  * Create an Error with the specified message, config, error code, and response.
@@ -907,7 +1386,7 @@ module.exports = function createError(message, config, code, response) {
 
 
 /***/ }),
-/* 7 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -925,7 +1404,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 8 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -11185,7 +11664,7 @@ return jQuery;
 
 
 /***/ }),
-/* 9 */
+/* 20 */
 /***/ (function(module, exports) {
 
 var g;
@@ -11212,431 +11691,22 @@ module.exports = g;
 
 
 /***/ }),
-/* 10 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(31);
-
-//Vue.component('example', require('./components/Example.vue'));
-/*
-const app = new Vue({
-    el: '#app'
-});
-*/
-
-Vue.component('modal', __webpack_require__(34));
-
-// constants
-var viewType = {
-    list: 1,
-    create: 2,
-    edit: 3,
-    delete: 4
-};
-
-// API
-function fetch(url) {
-    return new Promise(function (resolve, reject) {
-        axios.get(url).then(function (response) {
-            resolve(response.data);
-        }).catch(function (e) {
-            reject(e);
-        });
-    });
-}
-function post(url, request) {
-    return new Promise(function (resolve, reject) {
-        axios.post(url, request).then(function (response) {
-            resolve(response.data);
-        }).catch(function (e) {
-            reject(e);
-        });
-    });
-}
-function put(url, request) {
-    return new Promise(function (resolve, reject) {
-        axios.put(url, request).then(function (response) {
-            resolve(response.data);
-        }).catch(function (e) {
-            reject(e);
-        });
-    });
-}
-function destroy(url) {
-    return new Promise(function (resolve, reject) {
-        axios.delete(url).then(function (response) {
-            resolve(response.data);
-        }).catch(function (e) {
-            reject(e);
-        });
-    });
-}
-
-function checkAuth() {
-    return fetch('api/auth');
-}
-function getEmployees() {
-    return fetch('api/employee/list');
-}
-function createEmployee(request) {
-    return post('api/employee', request);
-}
-function updateEmployee(id, request) {
-    return put('api/employee/' + id, request);
-}
-function destroyEmployee(id, request) {
-    return destroy('api/employee/' + id, request);
-}
-
-function getDepartments() {
-    return fetch('api/department/list');
-}
-function createDepartment(request) {
-    return post('api/department', request);
-}
-function updateDepartment(id, request) {
-    return put('api/department/' + id, request);
-}
-function destroyDepartment(id, request) {
-    return destroy('api/department/' + id, request);
-}
-
-function getPositions() {
-    return fetch('api/position/list');
-}
-function createPosition(request) {
-    return post('api/position', request);
-}
-function updatePosition(id, request) {
-    return put('api/position/' + id, request);
-}
-function destroyPosition(id, request) {
-    return destroy('api/position/' + id, request);
-}
-
-/**
- * employee
- */
-if (document.querySelector('#employee')) {
-
-    var employee = new Vue({
-        el: '#employee',
-        data: {
-            isLogin: 0,
-            viewType: viewType,
-            currentView: viewType.list,
-            employees: [],
-            departments: [],
-            positions: [],
-            selectedEmployee: [],
-            newEmployee: [],
-            search: {
-                name: ''
-            }
-        },
-        /*
-        components: {
-            editForm
-        },
-        */
-        mounted: function mounted() {
-            var _this = this;
-
-            checkAuth().then(function (response) {
-                _this.isLogin = response.isLogin;
-            });
-            getEmployees().then(function (response) {
-                _this.employees = response;
-            }), getDepartments().then(function (response) {
-                _this.departments = response;
-            });
-            getPositions().then(function (response) {
-                _this.positions = response;
-            });
-        },
-
-        methods: {
-            setSelectedEmployee: function setSelectedEmployee(index) {
-                this.selectedEmployee = this.employees[index];
-            },
-            searchByName: function searchByName(employees, name) {
-                if (name === undefined || name === '') {
-                    return employees;
-                }
-                return employees.filter(function (employee) {
-                    return employee.name.indexOf(name) > 0;
-                });
-            },
-            changeView: function changeView(type) {
-                var _this2 = this;
-
-                if (type == this.viewType.list) {
-                    getEmployees().then(function (response) {
-                        _this2.employees = response;
-                        _this2.currentView = type;
-                    });
-                } else {
-                    this.currentView = type;
-                }
-            },
-            clickCreate: function clickCreate(index) {
-                this.changeView(this.viewType.create);
-            },
-            clickEdit: function clickEdit(index) {
-                this.setSelectedEmployee(index);
-                this.changeView(this.viewType.edit);
-            },
-            clickDelete: function clickDelete(index) {
-                this.setSelectedEmployee(index);
-                this.changeView(this.viewType.delete);
-            },
-            submitCreate: function submitCreate(employee) {
-                var _this3 = this;
-
-                createEmployee({
-                    name: employee.name,
-                    department_id: employee.departmentId,
-                    position_id: employee.positionId
-                }).then(function (response) {
-                    _this3.changeView(_this3.viewType.list);
-                });
-            },
-            submitEdit: function submitEdit(employee) {
-                var _this4 = this;
-
-                updateEmployee(employee.id, {
-                    name: employee.name,
-                    department_id: employee.departmentId,
-                    position_id: employee.positionId
-                }).then(function (response) {
-                    _this4.changeView(_this4.viewType.list);
-                });
-            },
-            submitDelete: function submitDelete(employee) {
-                var _this5 = this;
-
-                destroyEmployee(employee.id).then(function (response) {
-                    _this5.changeView(_this5.viewType.list);
-                });
-            }
-        }
-    });
-}
-
-/**
- * department
- */
-if (document.querySelector('#department')) {
-
-    var department = new Vue({
-        el: '#department',
-        data: {
-            isLogin: 0,
-            viewType: viewType,
-            currentView: viewType.list,
-            departments: [],
-            selectedDepartment: [],
-            newDepartment: [],
-            search: {
-                name: ''
-            }
-        },
-        /*
-        components: {
-            editForm
-        },
-        */
-        mounted: function mounted() {
-            var _this6 = this;
-
-            checkAuth().then(function (response) {
-                _this6.isLogin = response.isLogin;
-            });
-            getDepartments().then(function (response) {
-                _this6.departments = response;
-            });
-        },
-
-        methods: {
-            setSelectedDepartment: function setSelectedDepartment(index) {
-                this.selectedDepartment = this.departments[index];
-            },
-            searchByName: function searchByName(departments, name) {
-                if (name === undefined || name === '') {
-                    return departments;
-                }
-                return departments.filter(function (department) {
-                    return department.name.indexOf(name) > 0;
-                });
-            },
-            changeView: function changeView(type) {
-                var _this7 = this;
-
-                if (type == this.viewType.list) {
-                    getDepartments().then(function (response) {
-                        _this7.departments = response;
-                        _this7.currentView = type;
-                    });
-                } else {
-                    this.currentView = type;
-                }
-            },
-            clickCreate: function clickCreate(index) {
-                this.changeView(this.viewType.create);
-            },
-            clickEdit: function clickEdit(index) {
-                this.setSelectedDepartment(index);
-                this.changeView(this.viewType.edit);
-            },
-            clickDelete: function clickDelete(index) {
-                this.setSelectedDepartment(index);
-                this.changeView(this.viewType.delete);
-            },
-            submitCreate: function submitCreate(department) {
-                var _this8 = this;
-
-                createDepartment({
-                    name: department.name
-                }).then(function (response) {
-                    _this8.changeView(_this8.viewType.list);
-                });
-            },
-            submitEdit: function submitEdit(department) {
-                var _this9 = this;
-
-                updateDepartment(department.id, {
-                    name: department.name
-                }).then(function (response) {
-                    _this9.changeView(_this9.viewType.list);
-                });
-            },
-            submitDelete: function submitDelete(department) {
-                var _this10 = this;
-
-                destroyDepartment(department.id).then(function (response) {
-                    _this10.changeView(_this10.viewType.list);
-                });
-            }
-        }
-    });
-}
-
-/**
- * position
- */
-if (document.querySelector('#position')) {
-
-    var position = new Vue({
-        el: '#position',
-        data: {
-            isLogin: 0,
-            viewType: viewType,
-            currentView: viewType.list,
-            positions: [],
-            selectedPosition: [],
-            newPosition: [],
-            search: {
-                name: ''
-            }
-        },
-        mounted: function mounted() {
-            var _this11 = this;
-
-            checkAuth().then(function (response) {
-                _this11.isLogin = response.isLogin;
-            });
-            getPositions().then(function (response) {
-                _this11.positions = response;
-            });
-        },
-
-        methods: {
-            setSelectedPosition: function setSelectedPosition(index) {
-                this.selectedPosition = this.positions[index];
-            },
-            searchByName: function searchByName(positions, name) {
-                if (name === undefined || name === '') {
-                    return positions;
-                }
-                return positions.filter(function (position) {
-                    return position.name.indexOf(name) > 0;
-                });
-            },
-            changeView: function changeView(type) {
-                var _this12 = this;
-
-                if (type == this.viewType.list) {
-                    getPositions().then(function (response) {
-                        _this12.positions = response;
-                        _this12.currentView = type;
-                    });
-                } else {
-                    this.currentView = type;
-                }
-            },
-            clickCreate: function clickCreate(index) {
-                this.changeView(this.viewType.create);
-            },
-            clickEdit: function clickEdit(index) {
-                this.setSelectedPosition(index);
-                this.changeView(this.viewType.edit);
-            },
-            clickDelete: function clickDelete(index) {
-                this.setSelectedPosition(index);
-                this.changeView(this.viewType.delete);
-            },
-            submitCreate: function submitCreate(position) {
-                var _this13 = this;
-
-                createPosition({
-                    name: position.name
-                }).then(function (response) {
-                    _this13.changeView(_this13.viewType.list);
-                });
-            },
-            submitEdit: function submitEdit(position) {
-                var _this14 = this;
-
-                updatePosition(position.id, {
-                    name: position.name
-                }).then(function (response) {
-                    _this14.changeView(_this14.viewType.list);
-                });
-            },
-            submitDelete: function submitDelete(position) {
-                var _this15 = this;
-
-                destroyPosition(position.id).then(function (response) {
-                    _this15.changeView(_this15.viewType.list);
-                });
-            }
-        }
-    });
-}
+module.exports = __webpack_require__(22);
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(13);
-
-/***/ }),
-/* 13 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
-var bind = __webpack_require__(7);
-var Axios = __webpack_require__(15);
-var defaults = __webpack_require__(1);
+var utils = __webpack_require__(11);
+var bind = __webpack_require__(18);
+var Axios = __webpack_require__(24);
+var defaults = __webpack_require__(12);
 
 /**
  * Create an instance of Axios
@@ -11669,15 +11739,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(4);
-axios.CancelToken = __webpack_require__(14);
-axios.isCancel = __webpack_require__(5);
+axios.Cancel = __webpack_require__(15);
+axios.CancelToken = __webpack_require__(23);
+axios.isCancel = __webpack_require__(16);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(29);
+axios.spread = __webpack_require__(38);
 
 module.exports = axios;
 
@@ -11686,13 +11756,13 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 14 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(4);
+var Cancel = __webpack_require__(15);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -11750,18 +11820,18 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 15 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(1);
-var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(16);
-var dispatchRequest = __webpack_require__(17);
-var isAbsoluteURL = __webpack_require__(25);
-var combineURLs = __webpack_require__(23);
+var defaults = __webpack_require__(12);
+var utils = __webpack_require__(11);
+var InterceptorManager = __webpack_require__(25);
+var dispatchRequest = __webpack_require__(26);
+var isAbsoluteURL = __webpack_require__(34);
+var combineURLs = __webpack_require__(32);
 
 /**
  * Create a new instance of Axios
@@ -11842,13 +11912,13 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 16 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(11);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -11901,16 +11971,16 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 17 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
-var transformData = __webpack_require__(20);
-var isCancel = __webpack_require__(5);
-var defaults = __webpack_require__(1);
+var utils = __webpack_require__(11);
+var transformData = __webpack_require__(29);
+var isCancel = __webpack_require__(16);
+var defaults = __webpack_require__(12);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -11987,7 +12057,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 18 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12013,13 +12083,13 @@ module.exports = function enhanceError(error, config, code, response) {
 
 
 /***/ }),
-/* 19 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(6);
+var createError = __webpack_require__(17);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -12045,13 +12115,13 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 20 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(11);
 
 /**
  * Transform the data for a request or a response
@@ -12072,7 +12142,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 21 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12115,13 +12185,13 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 22 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(11);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -12190,7 +12260,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 23 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12209,13 +12279,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 24 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(11);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -12269,7 +12339,7 @@ module.exports = (
 
 
 /***/ }),
-/* 25 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12290,13 +12360,13 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 26 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(11);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -12365,13 +12435,13 @@ module.exports = (
 
 
 /***/ }),
-/* 27 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(11);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -12384,13 +12454,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 28 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(0);
+var utils = __webpack_require__(11);
 
 /**
  * Parse headers into an object
@@ -12428,7 +12498,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 29 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12462,7 +12532,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 30 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12515,11 +12585,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 31 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(33);
+window._ = __webpack_require__(42);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -12527,9 +12597,9 @@ window._ = __webpack_require__(33);
  * code may be modified to fit the specific needs of your application.
  */
 
-window.$ = window.jQuery = __webpack_require__(8);
+window.$ = window.jQuery = __webpack_require__(19);
 
-__webpack_require__(32);
+__webpack_require__(41);
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -12537,7 +12607,7 @@ __webpack_require__(32);
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = __webpack_require__(37);
+window.Vue = __webpack_require__(46);
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -12545,7 +12615,7 @@ window.Vue = __webpack_require__(37);
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(12);
+window.axios = __webpack_require__(21);
 
 window.axios.defaults.headers.common = {
   'X-CSRF-TOKEN': window.Laravel.csrfToken,
@@ -12568,7 +12638,7 @@ window.axios.defaults.headers.common = {
 // });
 
 /***/ }),
-/* 32 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*!
@@ -14949,10 +15019,10 @@ if (typeof jQuery === 'undefined') {
 
 }(jQuery);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)))
 
 /***/ }),
-/* 33 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -32041,17 +32111,17 @@ if (typeof jQuery === 'undefined') {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(38)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20), __webpack_require__(47)(module)))
 
 /***/ }),
-/* 34 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Component = __webpack_require__(35)(
+var Component = __webpack_require__(44)(
   /* script */
-  __webpack_require__(30),
+  __webpack_require__(39),
   /* template */
-  __webpack_require__(36),
+  __webpack_require__(45),
   /* scopeId */
   null,
   /* cssModules */
@@ -32078,7 +32148,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 35 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = function normalizeComponent (
@@ -32131,7 +32201,7 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 36 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -32214,7 +32284,7 @@ if (false) {
 }
 
 /***/ }),
-/* 37 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41539,10 +41609,10 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(9)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13), __webpack_require__(20)))
 
 /***/ }),
-/* 38 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -41567,14 +41637,6 @@ module.exports = function(module) {
 	}
 	return module;
 };
-
-
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(10);
-module.exports = __webpack_require__(11);
 
 
 /***/ })

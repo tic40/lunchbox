@@ -9,18 +9,9 @@ use App\Services\GenerateGroup;
 class GroupController extends Controller
 {
 
-    protected $generateService;
-
-    public function __construct(
-        GenerateGroup $generateGroup
-    ) {
-        $this->generateGroup = $generateGroup;
-    }
-
     public function index()
     {
-        $groupList = $this->generateGroup->execute();
-        return view('group/index', ['groupList' => $groupList]);
+        return view('group/index');
     }
 
     public function create()

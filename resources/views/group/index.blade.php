@@ -1,30 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
-<div id="group" class="container">
+<div id="group" class="container" v-cloak>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
-            <label>Month:
-                <input id="date" type="month" name="month" value="" />
-            </label>
-
-            <button type="button" class="btn btn-success" onclick="alert('グループが生成される');">generate</button>
-            <button type="button" class="btn btn-danger" onclick="alert('グループを削除する');">delete</button>
+            <div v-if="isLogin">
+                <button type="button" class="btn btn-success" @click="clickGenerate(date.year, date.month)">generate</button>
+                <button type="button" class="btn btn-danger" @click="clickDelete">delete</button>
+            </div>
 
             <h3>Group List</h3>
+            <label>Month:
+                <input id="date" type="month" name="month" />
+            </label>
 
-            @foreach ($groupList as $group)
-                <ul class="list-group">
-                    @foreach ($group as $employee)
-                        <li class="list-group-item">
-                            {{ $employee->name }}
-                            @if ($loop->first)
-                                <i class="fa fa-star-o text-success" aria-hidden="true"></i></li>
-                            @endif
-                    @endforeach
-                </ul>
-            @endforeach
+            <ul v-for="(group, listKey) in groupList" class="list-group">
+                <li v-for="(employee, groupKey) in group" class="list-group-item">
+                    @{{employee.name}}
+                    <i v-if="groupKey == 0" class="fa fa-star-o text-success" aria-hidden="true"></i>
+                </li>
+            </ul>
 
         </div>
     </div>

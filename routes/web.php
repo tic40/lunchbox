@@ -41,5 +41,7 @@ Route::post('/api/position', 'Api\PositionController@store');
 Route::put('/api/position/{id}', 'Api\PositionController@update');
 Route::delete('/api/position/{id}', 'Api\PositionController@destroy');
 
+Route::get('/api/group/{year}/{month}/list', 'Api\GroupController@index');
+Route::get('/api/group/{year}/{month}/create', 'Api\GroupController@create');
 
 Auth::routes();

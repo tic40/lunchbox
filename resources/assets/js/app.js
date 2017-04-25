@@ -105,6 +105,14 @@ function destroyPosition(id, request) {
     return destroy('api/position/' + id, request)
 }
 
+function getGroupList(year, month) {
+    return fetch('api/group/' + year + '/' + month + '/list')
+}
+function getGenerateGroup(year, month) {
+    return fetch('api/group/' + year + '/' + month + '/create')
+}
+
+
 /**
  * employee
  */
@@ -388,3 +396,47 @@ if (document.querySelector('#position')) {
    });
 }
 
+/**
+ * group
+ */
+if (document.querySelector('#group')) {
+
+    const group = new Vue({
+        el: '#group',
+        data: {
+            isLogin: 0,
+            viewType: viewType,
+            currentView: viewType.list,
+            groupList: [],
+            date: {
+                year: '',
+                month: ''
+            }
+        },
+        mounted() {
+            let date = new Date()
+            this.date.year = date.getFullYear()
+            this.date.month = date.getMonth() + 1
+
+            checkAuth()
+            .then(response => {
+                this.isLogin = response.isLogin
+            })
+            getGroupList(this.date.year, this.date.month)
+            .then(response => {
+                this.groupList = response
+            })
+        },
+        methods: {
+            clickGenerate: function(year, month) {
+                getGenerateGroup(year, month)
+                .then(response => {
+                    this.groupList = response
+                })
+            },
+            clickDelete: function() {
+                console.log('delete')
+            }
+        }
+    })
+}
