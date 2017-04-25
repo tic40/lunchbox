@@ -1,13 +1,20 @@
 require('./bootstrap');
 
-//Vue.component('example', require('./components/Example.vue'));
-/*
-const app = new Vue({
-    el: '#app'
-});
-*/
+const GroupList = require('./components/group/GroupList.vue')
+const EmployeeList = require('./components/employee/EmployeeList.vue')
+const EmployeeCreate = require('./components/employee/EmployeeCreate.vue')
+const EmployeeEdit = require('./components/employee/EmployeeEdit.vue')
+const EmployeeDelete = require('./components/employee/EmployeeDelete.vue')
 
-Vue.component('modal', require('./components/modal/Simple.vue'));
+const DepartmentList = require('./components/department/DepartmentList.vue')
+const DepartmentCreate = require('./components/department/DepartmentCreate.vue')
+const DepartmentEdit = require('./components/department/DepartmentEdit.vue')
+const DepartmentDelete = require('./components/department/DepartmentDelete.vue')
+
+const PositionList = require('./components/position/PositionList.vue')
+const PositionCreate = require('./components/position/PositionCreate.vue')
+const PositionEdit = require('./components/position/PositionEdit.vue')
+const PositionDelete = require('./components/position/PositionDelete.vue')
 
 // constants
 const viewType = {
@@ -19,14 +26,12 @@ const viewType = {
 
 // API
 function fetch(url) {
-    return new Promise((resolve, reject) => {
+    return promise = new Promise((resolve, reject) => {
         axios.get(url)
         .then(response => {
             resolve(response.data)
         })
-        .catch(e => {
-            reject(e)
-        })
+        .catch(e => { reject(e) })
     })
 }
 function post(url, request) {
@@ -35,9 +40,7 @@ function post(url, request) {
         .then(response => {
             resolve(response.data)
         })
-        .catch(e => {
-            reject(e)
-        })
+        .catch(e => { reject(e) })
     })
 }
 function put(url, request) {
@@ -46,9 +49,7 @@ function put(url, request) {
         .then(response => {
             resolve(response.data)
         })
-        .catch(e => {
-            reject(e)
-        })
+        .catch(e => { reject(e) })
     })
 }
 function destroy(url) {
@@ -57,9 +58,7 @@ function destroy(url) {
         .then(response => {
             resolve(response.data)
         })
-        .catch(e => {
-            reject(e)
-        })
+        .catch(e => { reject(e) })
     })
 }
 
@@ -108,8 +107,8 @@ function destroyPosition(id, request) {
 function getGroupList(year, month) {
     return fetch('api/group/' + year + '/' + month + '/list')
 }
-function getGenerateGroup(year, month) {
-    return fetch('api/group/' + year + '/' + month + '/create')
+function getGenerateGroup(year, month, groupNumber) {
+    return fetch('api/group/' + year + '/' + month + '/create/' + groupNumber)
 }
 
 
@@ -124,21 +123,19 @@ if (document.querySelector('#employee')) {
             isLogin: 0,
             viewType: viewType,
             currentView: viewType.list,
-            employees: [],
-            departments: [],
-            positions: [],
-            selectedEmployee: [],
-            newEmployee: [],
-            search: {
-                name: ''
-            }
+            employees: null,
+            departments: null,
+            positions: null,
+            selectedEmployee: null,
+            isLoading: false,
         },
-        /*
         components: {
-            editForm
+            EmployeeList,
+            EmployeeCreate,
+            EmployeeEdit,
+            EmployeeDelete
         },
-        */
-        mounted() {
+        created: function() {
             checkAuth()
             .then(response => {
                 this.isLogin = response.isLogin
@@ -160,21 +157,18 @@ if (document.querySelector('#employee')) {
             setSelectedEmployee: function(index) {
                 this.selectedEmployee = this.employees[index]
             },
-            searchByName: function(employees, name) {
-                if (name === undefined || name === '') { return employees }
-                return employees.filter(function (employee) {
-                    return employee.name.indexOf(name) > 0
-                })
-            },
             changeView: function(type) {
                 if (type == this.viewType.list) {
+                    this.loading(true)
                     getEmployees()
                     .then(response => {
                         this.employees = response
                         this.currentView = type
+                        this.loading(false)
                     })
                 } else {
                     this.currentView = type
+                    this.loading(false)
                 }
             },
             clickCreate: function(index) {
@@ -189,6 +183,7 @@ if (document.querySelector('#employee')) {
                 this.changeView(this.viewType.delete)
             },
             submitCreate: function(employee) {
+                this.loading(true)
                 createEmployee({
                     name: employee.name,
                     department_id: employee.departmentId,
@@ -199,6 +194,7 @@ if (document.querySelector('#employee')) {
                 })
             },
             submitEdit: function(employee) {
+                this.loading(true)
                 updateEmployee(employee.id, {
                     name: employee.name,
                     department_id: employee.departmentId,
@@ -209,10 +205,14 @@ if (document.querySelector('#employee')) {
                 })
             },
             submitDelete: function(employee) {
+                this.loading(true)
                 destroyEmployee(employee.id)
                 .then(response => {
                     this.changeView(this.viewType.list)
                 })
+            },
+            loading: function(bool) {
+                this.isLoading = bool
             }
         }
    });
@@ -229,19 +229,17 @@ if (document.querySelector('#department')) {
             isLogin: 0,
             viewType: viewType,
             currentView: viewType.list,
-            departments: [],
-            selectedDepartment: [],
-            newDepartment: [],
-            search: {
-                name: ''
-            }
+            departments: null,
+            selectedDepartment: null,
+            isLoading: false
         },
-        /*
         components: {
-            editForm
+            DepartmentList,
+            DepartmentCreate,
+            DepartmentEdit,
+            DepartmentDelete
         },
-        */
-        mounted() {
+        created: function() {
             checkAuth()
             .then(response => {
                 this.isLogin = response.isLogin
@@ -255,21 +253,18 @@ if (document.querySelector('#department')) {
             setSelectedDepartment: function(index) {
                 this.selectedDepartment = this.departments[index]
             },
-            searchByName: function(departments, name) {
-                if (name === undefined || name === '') { return departments }
-                return departments.filter(function (department) {
-                    return department.name.indexOf(name) > 0
-                })
-            },
             changeView: function(type) {
                 if (type == this.viewType.list) {
+                    this.loading(true)
                     getDepartments()
                     .then(response => {
                         this.departments = response
                         this.currentView = type
+                        this.loading(false)
                     })
                 } else {
                     this.currentView = type
+                    this.loading(false)
                 }
             },
             clickCreate: function(index) {
@@ -284,6 +279,7 @@ if (document.querySelector('#department')) {
                 this.changeView(this.viewType.delete)
             },
             submitCreate: function(department) {
+                this.loading(true)
                 createDepartment({
                     name: department.name,
                 })
@@ -292,6 +288,7 @@ if (document.querySelector('#department')) {
                 })
             },
             submitEdit: function(department) {
+                this.loading(true)
                 updateDepartment(department.id, {
                     name: department.name,
                 })
@@ -300,10 +297,14 @@ if (document.querySelector('#department')) {
                 })
             },
             submitDelete: function(department) {
+                this.loading(true)
                 destroyDepartment(department.id)
                 .then(response => {
                     this.changeView(this.viewType.list)
                 })
+            },
+            loading: function(bool) {
+                this.isLoading = bool
             }
         }
    });
@@ -321,14 +322,17 @@ if (document.querySelector('#position')) {
             isLogin: 0,
             viewType: viewType,
             currentView: viewType.list,
-            positions: [],
-            selectedPosition: [],
-            newPosition: [],
-            search: {
-                name: ''
-            }
+            positions: null,
+            selectedPosition: null,
+            isLoading: false
         },
-        mounted() {
+        components: {
+            PositionList,
+            PositionCreate,
+            PositionEdit,
+            PositionDelete
+        },
+        created: function() {
             checkAuth()
             .then(response => {
                 this.isLogin = response.isLogin
@@ -342,21 +346,18 @@ if (document.querySelector('#position')) {
             setSelectedPosition: function(index) {
                 this.selectedPosition = this.positions[index]
             },
-            searchByName: function(positions, name) {
-                if (name === undefined || name === '') { return positions }
-                return positions.filter(function (position) {
-                    return position.name.indexOf(name) > 0
-                })
-            },
             changeView: function(type) {
                 if (type == this.viewType.list) {
+                    this.loading(true)
                     getPositions()
                     .then(response => {
                         this.positions = response
                         this.currentView = type
+                        this.loading(false)
                     })
                 } else {
                     this.currentView = type
+                    this.loading(false)
                 }
             },
             clickCreate: function(index) {
@@ -371,6 +372,7 @@ if (document.querySelector('#position')) {
                 this.changeView(this.viewType.delete)
             },
             submitCreate: function(position) {
+                this.loading(true)
                 createPosition({
                     name: position.name,
                 })
@@ -379,6 +381,7 @@ if (document.querySelector('#position')) {
                 })
             },
             submitEdit: function(position) {
+                this.loading(true)
                 updatePosition(position.id, {
                     name: position.name,
                 })
@@ -387,10 +390,14 @@ if (document.querySelector('#position')) {
                 })
             },
             submitDelete: function(position) {
+                this.loading(true)
                 destroyPosition(position.id)
                 .then(response => {
                     this.changeView(this.viewType.list)
                 })
+            },
+            loading: function(bool) {
+                this.isLoading = bool
             }
         }
    });
@@ -407,35 +414,88 @@ if (document.querySelector('#group')) {
             isLogin: 0,
             viewType: viewType,
             currentView: viewType.list,
-            groupList: [],
-            date: {
-                year: '',
-                month: ''
-            }
+            groupList: null,
+            generatedGroupList: null,
+            currentDate: new Date(),
+            yearMonth: '0000-00',
+            groupNumber: 4,
+            isLoading: false
         },
-        mounted() {
-            let date = new Date()
-            this.date.year = date.getFullYear()
-            this.date.month = date.getMonth() + 1
-
+        components: {
+            GroupList
+        },
+        created: function() {
+            this.yearMonth = this.getCurrentYearMonth()
             checkAuth()
             .then(response => {
                 this.isLogin = response.isLogin
             })
-            getGroupList(this.date.year, this.date.month)
+            getGroupList(this.getYear, this.getMonth)
             .then(response => {
                 this.groupList = response
             })
         },
-        methods: {
-            clickGenerate: function(year, month) {
-                getGenerateGroup(year, month)
+        computed: {
+            getYear: function() {
+                return this.yearMonth.split('-')[0]
+            },
+            getMonth: function() {
+                return this.yearMonth.split('-')[1]
+            }
+        },
+        watch: {
+            yearMonth: function (val, oldVal) {
+                getGroupList(this.getYear, this.getMonth)
                 .then(response => {
+                    console.log('get new group list' + val)
                     this.groupList = response
                 })
+            }
+        },
+        methods: {
+            getCurrentYearMonth: function() {
+                return [
+                    this.currentDate.getFullYear(),
+                    ("0" + (this.currentDate.getMonth() + 1)).slice(-2)
+                ].join('-')
+            },
+            changeView: function(type) {
+                if (type == this.viewType.list) {
+                    this.loading(true)
+                    getGroupList(this.getYear, this.getMonth)
+                    .then(response => {
+                        this.groupList = response
+                        this.currentView = type
+                        this.loading(false)
+                    })
+                } else {
+                    this.currentView = type
+                    this.loading(false)
+                }
+            },
+            clickCreate: function(year, month) {
+                this.generatedGroupList = null;
+                this.changeView(this.viewType.create)
             },
             clickDelete: function() {
-                console.log('delete')
+                this.changeView(this.viewType.delete)
+            },
+            clickGenerate: function(year, month, groupNumber) {
+                this.loading(true)
+                getGenerateGroup(year, month, groupNumber)
+                .then(response => {
+                    this.generatedGroupList = response
+                    this.loading(false)
+                })
+            },
+            submitCreate: function() {
+                console.log('submit create')
+            },
+            submitDelete: function() {
+                console.log('submit delete')
+            },
+            loading: function(bool) {
+                this.isLoading = bool
             }
         }
     })

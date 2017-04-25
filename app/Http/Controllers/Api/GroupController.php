@@ -22,11 +22,11 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(int $year, int $month, int $groupNumber)
     {
         $generateGroup = new GenerateGroup;
         return response()->json(
-            $generateGroup->execute()
+            $generateGroup->execute($groupNumber)
         );
     }
 

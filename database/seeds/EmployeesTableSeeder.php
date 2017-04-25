@@ -18,7 +18,7 @@ class EmployeesTableSeeder extends Seeder
             DB::table('employees')->insert([
                 'name' => $faker->firstNameMale,
                 'department_id' => $faker->numberBetween($min = 1, $max = 20),
-                'position_id' => $faker->numberBetween($min = 1, $max = 20),
+                'position_id' => $faker->numberBetween($min = 1, $max = 12),
                 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
             ]);

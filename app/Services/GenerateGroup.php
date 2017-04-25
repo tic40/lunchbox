@@ -9,22 +9,22 @@ class GenerateGroup
 {
     private $groupsCount;
 
-    public function execute()
+    public function execute(int $groupNumber): array
     {
         $employeeEntities = EmployeeRepository::getEmployees();
-
         $groupList = [];
-        $group = [];
-        $i = 0;
-        foreach($employeeEntities as $employee) {
-            if (4 <= count($group)) {
-                array_push($groupList, $group);
-                $group = [];
-            }
-            array_push($group, $employee);
+        for($i = 0; $i < $groupNumber; $i++) {
+            $groupList[$i] = [];
         }
 
-        return $groupList;
+        shuffle($employeeEntities);
+        $i = 0;
+        foreach($employeeEntities as $employee) {
+            if ($groupNumber <= $i) { $i = 0; }
+            array_push($groupList[$i], $employee);
+            $i++;
+        }
+        return array_reverse($groupList);
     }
 
     public function isSameDepartment(Employee $emp1, Employee $emp2)
