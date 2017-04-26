@@ -4,51 +4,46 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
-            <!-- view list -->
+            <!-- list -->
             <div v-if="currentView === viewType.list">
                 <department-list
                     :departments="departments"
                     :view-type="viewType"
                     :is-login="isLogin"
-                    @click-create="clickCreate"
-                    @click-edit="clickEdit"
-                    @click-delete="clickDelete"
-                >
+                    @set-selected-department="setSelectedDepartment"
+                    @change-view="changeView">
                 </department-list>
             </div>
 
-            <!-- view create -->
+            <!-- create -->
             <div v-else-if="currentView === viewType.create">
                 <department-create
                     :view-type="viewType"
-                    :is-login="isLogin"
-                    @submit-create="submitCreate"
-                    @change-view="changeView"
-                >
+                    :is-loading="isLoading"
+                    @loading="loading"
+                    @change-view="changeView">
                 </department-create>
             </div>
 
-            <!-- view edit -->
+            <!-- edit -->
             <div v-else-if="currentView === viewType.edit">
                 <department-edit
                     :department="selectedDepartment"
                     :view-type="viewType"
-                    :is-login="isLogin"
-                    @submit-edit="submitEdit"
-                    @change-view="changeView"
-                >
+                    :is-loading="isLoading"
+                    @loading="loading"
+                    @change-view="changeView">
                 </department-edit>
             </div>
 
-            <!-- view delete -->
+            <!-- delete -->
             <div v-else-if="currentView === viewType.delete">
                 <department-delete
                     :department="selectedDepartment"
                     :view-type="viewType"
-                    :is-login="isLogin"
-                    @submit-delete="submitDelete"
-                    @change-view="changeView"
-                >
+                    :is-loading="isLoading"
+                    @loading="loading"
+                    @change-view="changeView">
                 </department-delete>
             </div>
 

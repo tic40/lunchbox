@@ -35,6 +35,8 @@
 </template>
 
 <script>
+    import { createEmployee } from '../../api'
+
     export default {
         name: 'employee-create',
         data: function() {
@@ -56,8 +58,16 @@
             changeView: function(type) {
                 this.$emit('change-view', type)
             },
-            submitCreate: function(newEmployee) {
-                this.$emit('submit-create', newEmployee)
+            submitCreate: function(employee) {
+                this.$emit('loading', true)
+                createEmployee({
+                    name: employee.name,
+                    department_id: employee.departmentId,
+                    position_id: employee.positionId
+                })
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }

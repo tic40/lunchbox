@@ -5,10 +5,10 @@
             <strong class="text-danger">Are you sure to delete?</strong>
 
             <div style="margin-top: 1em">
-                <p>id: @{{employee.id}}</p>
-                <p>name: @{{employee.name}}</p>
-                <p>department name: @{{employee.departmentName}}</p>
-                <p>position name: @{{employee.positionName}}</p>
+                <p>id: {{employee.id}}</p>
+                <p>name: {{employee.name}}</p>
+                <p>department name: {{employee.departmentName}}</p>
+                <p>position name: {{employee.positionName}}</p>
             </div>
 
             <div style="margin-top: 2em">
@@ -24,6 +24,8 @@
 </template>
 
 <script>
+    import { destroyEmployee } from '../../api'
+
     export default {
         name: 'employee-delete',
         data: function() {
@@ -40,7 +42,11 @@
                 this.$emit('change-view', type)
             },
             submitDelete: function(employee) {
-                this.$emit('submit-delete', employee)
+                this.$emit('loading', true)
+                destroyEmployee(employee.id)
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }

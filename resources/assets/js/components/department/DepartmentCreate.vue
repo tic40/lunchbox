@@ -20,6 +20,8 @@
 </template>
 
 <script>
+    import { createDepartment } from '../../api'
+
     export default {
         name: 'department-create',
         data: function() {
@@ -37,8 +39,14 @@
             changeView: function(type) {
                 this.$emit('change-view', type)
             },
-            submitCreate: function(newDepartment) {
-                this.$emit('submit-create', newDepartment)
+            submitCreate: function(department) {
+                this.$emit('loading', true)
+                createDepartment({
+                    name: department.name,
+                })
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }

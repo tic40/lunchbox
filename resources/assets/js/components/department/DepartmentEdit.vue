@@ -24,6 +24,8 @@
 </template>
 
 <script>
+    import { updateDepartment } from '../../api'
+
     export default {
         name: 'department-edit',
         data: function() {
@@ -40,7 +42,13 @@
                 this.$emit('change-view', type)
             },
             submitEdit: function(department) {
-                this.$emit('submit-edit', department)
+                this.$emit('loading', true)
+                updateDepartment(department.id, {
+                    name: department.name,
+                })
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }

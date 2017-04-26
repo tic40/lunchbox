@@ -1,20 +1,29 @@
-require('./bootstrap');
+require('./bootstrap')
 
-const GroupList = require('./components/group/GroupList.vue')
-const EmployeeList = require('./components/employee/EmployeeList.vue')
-const EmployeeCreate = require('./components/employee/EmployeeCreate.vue')
-const EmployeeEdit = require('./components/employee/EmployeeEdit.vue')
-const EmployeeDelete = require('./components/employee/EmployeeDelete.vue')
+// API
+import {
+    checkAuth,
+    getEmployees,
+    getDepartments,
+    getPositions,
+    getGroupList,
+    getGenerateGroup
+} from './api'
 
-const DepartmentList = require('./components/department/DepartmentList.vue')
-const DepartmentCreate = require('./components/department/DepartmentCreate.vue')
-const DepartmentEdit = require('./components/department/DepartmentEdit.vue')
-const DepartmentDelete = require('./components/department/DepartmentDelete.vue')
-
-const PositionList = require('./components/position/PositionList.vue')
-const PositionCreate = require('./components/position/PositionCreate.vue')
-const PositionEdit = require('./components/position/PositionEdit.vue')
-const PositionDelete = require('./components/position/PositionDelete.vue')
+// components
+import GroupList from './components/group/GroupList.vue'
+import EmployeeList from './components/employee/EmployeeList.vue'
+import EmployeeCreate from './components/employee/EmployeeCreate.vue'
+import EmployeeEdit from './components/employee/EmployeeEdit.vue'
+import EmployeeDelete from './components/employee/EmployeeDelete.vue'
+import DepartmentList from './components/department/DepartmentList.vue'
+import DepartmentCreate from './components/department/DepartmentCreate.vue'
+import DepartmentEdit from './components/department/DepartmentEdit.vue'
+import DepartmentDelete from './components/department/DepartmentDelete.vue'
+import PositionList from './components/position/PositionList.vue'
+import PositionCreate from './components/position/PositionCreate.vue'
+import PositionEdit from './components/position/PositionEdit.vue'
+import PositionDelete from './components/position/PositionDelete.vue'
 
 // constants
 const viewType = {
@@ -23,94 +32,6 @@ const viewType = {
     edit: 3,
     delete: 4,
 };
-
-// API
-function fetch(url) {
-    return promise = new Promise((resolve, reject) => {
-        axios.get(url)
-        .then(response => {
-            resolve(response.data)
-        })
-        .catch(e => { reject(e) })
-    })
-}
-function post(url, request) {
-    return new Promise((resolve, reject) => {
-        axios.post(url, request)
-        .then(response => {
-            resolve(response.data)
-        })
-        .catch(e => { reject(e) })
-    })
-}
-function put(url, request) {
-    return new Promise((resolve, reject) => {
-        axios.put(url, request)
-        .then(response => {
-            resolve(response.data)
-        })
-        .catch(e => { reject(e) })
-    })
-}
-function destroy(url) {
-    return new Promise((resolve, reject) => {
-        axios.delete(url)
-        .then(response => {
-            resolve(response.data)
-        })
-        .catch(e => { reject(e) })
-    })
-}
-
-function checkAuth() {
-    return fetch('api/auth')
-}
-function getEmployees() {
-    return fetch('api/employee/list')
-}
-function createEmployee(request) {
-    return post('api/employee', request)
-}
-function updateEmployee(id, request) {
-    return put('api/employee/' + id, request)
-}
-function destroyEmployee(id, request) {
-    return destroy('api/employee/' + id, request)
-}
-
-function getDepartments() {
-    return fetch('api/department/list')
-}
-function createDepartment(request) {
-    return post('api/department', request)
-}
-function updateDepartment(id, request) {
-    return put('api/department/' + id, request)
-}
-function destroyDepartment(id, request) {
-    return destroy('api/department/' + id, request)
-}
-
-function getPositions() {
-    return fetch('api/position/list')
-}
-function createPosition(request) {
-    return post('api/position', request)
-}
-function updatePosition(id, request) {
-    return put('api/position/' + id, request)
-}
-function destroyPosition(id, request) {
-    return destroy('api/position/' + id, request)
-}
-
-function getGroupList(year, month) {
-    return fetch('api/group/' + year + '/' + month + '/list')
-}
-function getGenerateGroup(year, month, groupNumber) {
-    return fetch('api/group/' + year + '/' + month + '/create/' + groupNumber)
-}
-
 
 /**
  * employee
@@ -171,46 +92,6 @@ if (document.querySelector('#employee')) {
                     this.loading(false)
                 }
             },
-            clickCreate: function(index) {
-                this.changeView(this.viewType.create)
-            },
-            clickEdit: function(index) {
-                this.setSelectedEmployee(index)
-                this.changeView(this.viewType.edit)
-            },
-            clickDelete: function(index) {
-                this.setSelectedEmployee(index)
-                this.changeView(this.viewType.delete)
-            },
-            submitCreate: function(employee) {
-                this.loading(true)
-                createEmployee({
-                    name: employee.name,
-                    department_id: employee.departmentId,
-                    position_id: employee.positionId
-                })
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
-            },
-            submitEdit: function(employee) {
-                this.loading(true)
-                updateEmployee(employee.id, {
-                    name: employee.name,
-                    department_id: employee.departmentId,
-                    position_id: employee.positionId
-                })
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
-            },
-            submitDelete: function(employee) {
-                this.loading(true)
-                destroyEmployee(employee.id)
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
-            },
             loading: function(bool) {
                 this.isLoading = bool
             }
@@ -266,42 +147,6 @@ if (document.querySelector('#department')) {
                     this.currentView = type
                     this.loading(false)
                 }
-            },
-            clickCreate: function(index) {
-                this.changeView(this.viewType.create)
-            },
-            clickEdit: function(index) {
-                this.setSelectedDepartment(index)
-                this.changeView(this.viewType.edit)
-            },
-            clickDelete: function(index) {
-                this.setSelectedDepartment(index)
-                this.changeView(this.viewType.delete)
-            },
-            submitCreate: function(department) {
-                this.loading(true)
-                createDepartment({
-                    name: department.name,
-                })
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
-            },
-            submitEdit: function(department) {
-                this.loading(true)
-                updateDepartment(department.id, {
-                    name: department.name,
-                })
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
-            },
-            submitDelete: function(department) {
-                this.loading(true)
-                destroyDepartment(department.id)
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
             },
             loading: function(bool) {
                 this.isLoading = bool
@@ -359,42 +204,6 @@ if (document.querySelector('#position')) {
                     this.currentView = type
                     this.loading(false)
                 }
-            },
-            clickCreate: function(index) {
-                this.changeView(this.viewType.create)
-            },
-            clickEdit: function(index) {
-                this.setSelectedPosition(index)
-                this.changeView(this.viewType.edit)
-            },
-            clickDelete: function(index) {
-                this.setSelectedPosition(index)
-                this.changeView(this.viewType.delete)
-            },
-            submitCreate: function(position) {
-                this.loading(true)
-                createPosition({
-                    name: position.name,
-                })
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
-            },
-            submitEdit: function(position) {
-                this.loading(true)
-                updatePosition(position.id, {
-                    name: position.name,
-                })
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
-            },
-            submitDelete: function(position) {
-                this.loading(true)
-                destroyPosition(position.id)
-                .then(response => {
-                    this.changeView(this.viewType.list)
-                })
             },
             loading: function(bool) {
                 this.isLoading = bool

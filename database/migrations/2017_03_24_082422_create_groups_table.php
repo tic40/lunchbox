@@ -17,6 +17,7 @@ class CreateGroupsTable extends Migration
             $table->increments('id');
             $table->date('matched_date');
             $table->text('employees');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -19,6 +19,8 @@
 </template>
 
 <script>
+    import { createPosition } from '../../api'
+
     export default {
         name: 'position-create',
         data: function() {
@@ -36,8 +38,14 @@
             changeView: function(type) {
                 this.$emit('change-view', type)
             },
-            submitCreate: function(newPosition) {
-                this.$emit('submit-create', newPosition)
+            submitCreate: function(position) {
+                this.$emit('loading', true)
+                createPosition({
+                    name: position.name,
+                })
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }

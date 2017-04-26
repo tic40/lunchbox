@@ -12,18 +12,20 @@
                     <input class="form-control" id="edit-name" v-model="position.name" required/>
                 </div>
 
-                <button type="submit" class="btn btn-default btn-primary">
+                <button type="submit" class="btn btn-default btn-primary" :disabled="isLoading">
                     Submit
                 </button>
-                <p class="btn btn-default" @click="changeView(viewType.list)">
+                <button type="button" class="btn btn-default" @click="changeView(viewType.list)" :disabled="isLoading">
                     Cancel
-                </p>
+                </button>
             </form>
         </section>
     </div>
 </template>
 
 <script>
+    import { updatePosition } from '../../api'
+
     export default {
         name: 'position-edit',
         data: function() {
@@ -40,7 +42,13 @@
                 this.$emit('change-view', type)
             },
             submitEdit: function(position) {
-                this.$emit('submit-edit', position)
+                this.$emit('loading', true)
+                updatePosition(position.id, {
+                    name: position.name,
+                })
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }

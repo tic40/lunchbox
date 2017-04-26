@@ -4,53 +4,50 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
-            <!-- list view -->
+            <!-- list -->
             <div v-if="currentView === viewType.list">
                 <employee-list
                     :employees="employees"
+                    :view-type="viewType"
                     :is-login="isLogin"
-                    @click-create="clickCreate"
-                    @click-edit="clickEdit"
-                    @click-delete="clickDelete">
+                    @set-selected-employee="setSelectedEmployee"
+                    @change-view="changeView">
                 </employee-list>
             </div>
 
-            <!-- create view -->
+            <!-- create -->
             <div v-else-if="currentView === viewType.create">
                 <employee-create
                     :departments="departments"
                     :positions="positions"
-                    :is-loading="isLoading"
                     :view-type="viewType"
-                    @submit-create="submitCreate"
-                    @change-view="changeView"
-                >
+                    :is-loading="isLoading"
+                    @loading="loading"
+                    @change-view="changeView">
                 </employee-create>
             </div>
 
-            <!-- edit view -->
+            <!-- edit -->
             <div v-else-if="currentView === viewType.edit">
                 <employee-edit
                     :employee="selectedEmployee"
                     :departments="departments"
                     :positions="positions"
-                    :is-loading="isLoading"
                     :view-type="viewType"
-                    @submit-edit="submitEdit"
-                    @change-view="changeView"
-                >
+                    :is-loading="isLoading"
+                    @loading="loading"
+                    @change-view="changeView">
                 </employee-edit>
             </div>
 
-            <!-- delete view -->
+            <!-- delete -->
             <div v-else-if="currentView === viewType.delete">
                 <employee-delete
                     :employee="selectedEmployee"
-                    :is-loading="isLoading"
                     :view-type="viewType"
-                    @submit-delete="submitDelete"
-                    @change-view="changeView"
-                >
+                    :is-loading="isLoading"
+                    @loading="loading"
+                    @change-view="changeView">
                 </employee-delete>
             </div>
 

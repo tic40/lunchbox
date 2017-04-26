@@ -14,20 +14,18 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(department, key) in searchByName(departments, searchName)">
+                <tr v-for="(department, index) in searchByName(departments, searchName)">
                     <th scope="row" v-text="department.id"></th>
                     <td v-text="department.name"></td>
                     <td v-if="isLogin">
 
-                        <button class="btn btn-link" @click="clickEdit(key)">
+                        <button class="btn btn-link" @click="clickEdit(index)">
                             <span class="text-muted"><i class="fa fa-pencil" aria-hidden="true"></i> edit</span>
                         </button>
 
-                        <!--
-                        <button class="btn btn-link" @click="clickDelete(key)">
+                        <button class="btn btn-link" @click="clickDelete(index)">
                             <span class="text-muted"><i class="fa fa-close" aria-hidden="true"></i> delete</span>
                         </button>
-                        -->
                     </td>
                 </tr>
             </tbody>
@@ -50,13 +48,15 @@
         ],
         methods: {
             clickCreate: function() {
-                this.$emit('click-create')
+                this.$emit('change-view', this.viewType.create)
             },
-            clickEdit: function(key) {
-                this.$emit('click-edit', key)
+            clickEdit: function(index) {
+                this.$emit('set-selected-department', index)
+                this.$emit('change-view', this.viewType.edit)
             },
-            clickDelete: function(key) {
-                this.$emit('click-delete', key)
+            clickDelete: function(index) {
+                this.$emit('set-selected-department', index)
+                this.$emit('change-view', this.viewType.delete)
             },
             searchByName: function(departments, name) {
                 if (name === undefined || name === '') { return departments }

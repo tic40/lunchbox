@@ -39,6 +39,8 @@
 </template>
 
 <script>
+    import { updateEmployee } from '../../api'
+
     export default {
         name: 'employee-edit',
         data: function() {
@@ -57,7 +59,15 @@
                 this.$emit('change-view', type)
             },
             submitEdit: function(employee) {
-                this.$emit('submit-edit', employee)
+                this.$emit('loading', true)
+                updateEmployee(employee.id, {
+                    name: employee.name,
+                    department_id: employee.departmentId,
+                    position_id: employee.positionId
+                })
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }

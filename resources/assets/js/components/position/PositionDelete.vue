@@ -4,13 +4,13 @@
         <section>
             <p class="text-danger">Are you sure to delete?</p>
 
-            <p>id: @{{position.id}}</p>
-            <p>name: @{{position.name}}</p>
+            <p>id: {{position.id}}</p>
+            <p>name: {{position.name}}</p>
 
-            <button class="btn btn-default btn-primary" @click="submitDelete(position)">
+            <button class="btn btn-default btn-primary" @click="submitDelete(position)" :disabled="isLoading">
                 Submit
             </button>
-            <button class="btn btn-default" @click="changeView(viewType.list)">
+            <button class="btn btn-default" @click="changeView(viewType.list)" :disabled="isLoading">
                 Cancel
             </button>
         </section>
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+    import { destroyPosition } from '../../api'
+
     export default {
         name: 'position-delete',
         props: [
@@ -30,7 +32,11 @@
                 this.$emit('change-view', type)
             },
             submitDelete: function(position) {
-                this.$emit('submit-delete', position)
+                this.$emit('loading', true)
+                destroyPosition(position.id)
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }

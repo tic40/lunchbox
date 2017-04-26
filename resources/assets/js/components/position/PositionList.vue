@@ -14,20 +14,18 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(position, key) in searchByName(positions, searchName)">
+                <tr v-for="(position, index) in searchByName(positions, searchName)">
                     <th scope="row" v-text="position.id"></th>
                     <td v-text="position.name"></td>
                     <td v-if="isLogin">
 
-                        <button class="btn btn-link" @click="clickEdit(key)">
+                        <button class="btn btn-link" @click="clickEdit(index)">
                             <span class="text-muted"><i class="fa fa-pencil" aria-hidden="true"></i> edit</span>
                         </button>
 
-                        <!--
-                        <button class="btn btn-link" @click="clickDelete(key)">
+                        <button class="btn btn-link" @click="clickDelete(index)">
                             <span class="text-muted"><i class="fa fa-close" aria-hidden="true"></i> delete</span>
                         </button>
-                        -->
                     </td>
                 </tr>
             </tbody>
@@ -44,19 +42,21 @@
             }
         },
         props: [
-            'viewType',
             'positions',
-            'isLogin'
+            'isLogin',
+            'viewType'
         ],
         methods: {
             clickCreate: function() {
-                this.$emit('click-create')
+                this.$emit('change-view', this.viewType.create)
             },
-            clickEdit: function(key) {
-                this.$emit('click-edit', key)
+            clickEdit: function(index) {
+                this.$emit('set-selected-position', index)
+                this.$emit('change-view', this.viewType.edit)
             },
-            clickDelete: function(key) {
-                this.$emit('click-delete', key)
+            clickDelete: function(index) {
+                this.$emit('set-selected-position', index)
+                this.$emit('change-view', this.viewType.delete)
             },
             searchByName: function(positions, name) {
                 if (name === undefined || name === '') { return positions }

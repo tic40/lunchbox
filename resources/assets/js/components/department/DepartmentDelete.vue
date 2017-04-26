@@ -5,8 +5,8 @@
             <strong class="text-danger">Are you sure to delete?</strong>
 
             <div style="margin-top: 1em">
-                <p>id: @{{department.id}}</p>
-                <p>name: @{{department.name}}</p>
+                <p>id: {{department.id}}</p>
+                <p>name: {{department.name}}</p>
             </div>
 
             <div style="margin-top: 1em">
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+    import { destroyDepartment } from '../../api'
+
     export default {
         name: 'department-delete',
         props: [
@@ -34,7 +36,11 @@
                 this.$emit('change-view', type)
             },
             submitDelete: function(department) {
-                this.$emit('submit-delete', department)
+                this.$emit('loading', true)
+                destroyDepartment(department.id)
+                .then(response => {
+                    this.$emit('change-view', this.viewType.list)
+                })
             }
         }
     }
