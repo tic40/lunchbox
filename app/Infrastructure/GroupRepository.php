@@ -19,15 +19,6 @@ class GroupRepository
         $groups = \App\groups::where('target_date', $targetDate->format('Y-m-d'))
             ->get();
 
-
-/*
-        $groups = \App\groups::join('group_members', 'groups.id', '=', 'group_members.group_id')
-            ->join('employees', 'group_members.employee_id', '=', 'employees.id')
-            ->where('groups.target_date', $targetDate->format('Y-m-d'))
-            ->get();
-        return $groups;
-*/
-
         $groupEntities = [];
         foreach ($groups as $group) {
             $groupEntities[] = static::setGroupEntity($group);
@@ -67,8 +58,11 @@ class GroupRepository
         $groupEntity->name = $group->name;
         $groupEntity->targetDate = $group->target_date;
         $groupEntity->groupMembers = [];
-        foreach($group->group_members as $member) {
-            $groupEntity->groupMembers[] = $member;
+        foreach($group->group_members as $key => $member) {
+            $ary = [];
+            $ary['name'] = $group->employees[$key]['name'];
+            $ary['isLeader'] = $member['is_leader'];
+            $groupEntity->groupMembers[] = $ary;
         }
         return $groupEntity;
     }

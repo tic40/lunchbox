@@ -24,7 +24,17 @@ class GenerateGroup
             array_push($groupList[$i], $employee);
             $i++;
         }
-        return array_reverse($groupList);
+
+        $returnList = [];
+        foreach($groupList as $groupListKey => $group) {
+            foreach($group as $groupKey => $member) {
+                $returnList[$groupListKey]['name'] = $groupListKey+1;
+                $member->isLeader = ($groupKey == 0) ? 1 : 0;
+                $returnList[$groupListKey]['groupMembers'][] = $member;
+            }
+        }
+
+        return $returnList;
     }
 
     public function isSameDepartment(Employee $emp1, Employee $emp2)

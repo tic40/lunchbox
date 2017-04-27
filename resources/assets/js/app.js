@@ -223,11 +223,12 @@ if (document.querySelector('#group')) {
             isLogin: 0,
             viewType: viewType,
             currentView: viewType.list,
-            groupList: null,
+            groupList: [],
             generatedGroupList: null,
             currentDate: new Date(),
             yearMonth: '0000-00',
-            groupNumber: 4,
+            groupNumber: null,
+            canEditGroupList: false,
             isLoading: false
         },
         components: {
@@ -235,14 +236,18 @@ if (document.querySelector('#group')) {
         },
         created: function() {
             this.yearMonth = this.getCurrentYearMonth()
+
             checkAuth()
             .then(response => {
                 this.isLogin = response.isLogin
             })
+
             getGroupList(this.getYear, this.getMonth)
             .then(response => {
-                this.groupList = response
-                console.log(response)
+                if (response.groupList !== undefined && response.groupList.length > 0) {
+                    this.groupList = response.groupList
+                    this.canEditGroupList = response.canEdit
+                }
             })
         },
         computed: {
@@ -255,10 +260,19 @@ if (document.querySelector('#group')) {
         },
         watch: {
             yearMonth: function (val, oldVal) {
+                if (val === '' || val == undefined) {
+                    this.groupList = null
+                    return
+                }
                 getGroupList(this.getYear, this.getMonth)
                 .then(response => {
-                    console.log('get new group list' + val)
-                    this.groupList = response
+                    if (response.groupList !== undefined && response.groupList.length > 0) {
+                        this.groupList = response.groupList
+                        this.canEditGroupList = response.canEdit
+                    } else {
+                        this.groupList = null
+                        this.canEditGroupList = false
+                    }
                 })
             }
         },
@@ -274,10 +288,16 @@ if (document.querySelector('#group')) {
                     this.loading(true)
                     getGroupList(this.getYear, this.getMonth)
                     .then(response => {
-                        this.groupList = response
-                        this.currentView = type
-                        this.loading(false)
+                        if (response.groupList !== undefined && response.groupList.length > 0) {
+                            this.groupList = response.groupList
+                            this.canEditGroupList = response.canEdit
+                        } else {
+                            this.groupList = null
+                            this.canEditGroupList = false
+                        }
                     })
+                    this.currentView = type
+                    this.loading(false)
                 } else {
                     this.currentView = type
                     this.loading(false)

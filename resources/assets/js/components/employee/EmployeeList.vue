@@ -3,20 +3,22 @@
         <button v-if="isLogin" type="button" class="pull-right btn btn-success" @click="clickCreate">new employee</button>
         <h3>Employee List</h3>
         <div class="form-group">
-            <label for="search-name">search by name </label>
-            <input type="text" id="search-name" v-model="searchName">
+            <input type="text" id="search-name" v-model="search.name" placeholder="search name">
+            <input type="text" id="search-department" v-model="search.department" placeholder="search department">
+            <input type="text" id="search-position" v-model="search.position" placeholder="search position">
+            <button type="button" class="btn btn-default btn-sm" @click="resetSearchForm">reset</button>
         </div>
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Department Name</th>
-                    <th>Position Name</th>
+                    <th>Department</th>
+                    <th>Position</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(employee, index) in searchByName(employees, searchName)">
+                <tr v-for="(employee, index) in listFilter(employees, search.name, search.department, search.position)">
                     <th scope="row" v-text="employee.id"></th>
                     <td v-text="employee.name"></td>
                     <td v-text="employee.departmentName"></td>
@@ -42,7 +44,11 @@
         name: 'employee-list',
         data: function() {
             return {
-                searchName: ''
+                search: {
+                    name: '',
+                    department: '',
+                    position: ''
+                },
             }
         },
         props: [
@@ -62,12 +68,30 @@
                 this.$emit('set-selected-employee', index)
                 this.$emit('change-view', this.viewType.delete)
             },
-            searchByName: function(employees, name) {
-                if (name === undefined || name === '') { return employees }
+            resetSearchForm: function() {
+                this.search.name = ''
+                this.search.department = ''
+                this.search.position = ''
+            },
+            listFilter: function(employees, name, department, position) {
+                if (
+                    (name === undefined || name === '')
+                    && (department === undefined || department === '')
+                    && (position === undefined || position === '')
+                ) {
+                    return employees
+                }
+                let regexpName = new RegExp(name, 'i')
+                let regexpDepartment = new RegExp(department, 'i')
+                let regexpPosition = new RegExp(position, 'i')
                 return employees.filter(function (employee) {
-                    return employee.name.indexOf(name) > 0
+                    return (
+                        regexpName.test(employee.name)
+                        && regexpDepartment.test(employee.departmentName)
+                        && regexpPosition.test(employee.positionName)
+                    )
                 })
             }
-        }
+        },
     }
 </script>

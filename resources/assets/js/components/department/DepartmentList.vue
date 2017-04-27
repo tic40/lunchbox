@@ -3,8 +3,8 @@
         <button v-if="isLogin" type="button" class="pull-right btn btn-success" @click="clickCreate">new department</button>
         <h3>Department List</h3>
         <div class="form-group">
-            <label for="searchName">search by name </label>
-            <input type="text" id="searchName" v-model="searchName">
+            <input type="text" id="searchName" v-model="searchName" placeholder="search name">
+            <button type="text" @click="searchName = ''" class="btn btn-sm btn-default">reset</button>
         </div>
         <table class="table">
             <thead>
@@ -23,9 +23,11 @@
                             <span class="text-muted"><i class="fa fa-pencil" aria-hidden="true"></i> edit</span>
                         </button>
 
+<!--
                         <button class="btn btn-link" @click="clickDelete(index)">
                             <span class="text-muted"><i class="fa fa-close" aria-hidden="true"></i> delete</span>
                         </button>
+-->
                     </td>
                 </tr>
             </tbody>
@@ -58,12 +60,13 @@
                 this.$emit('set-selected-department', index)
                 this.$emit('change-view', this.viewType.delete)
             },
-            searchByName: function(departments, name) {
-                if (name === undefined || name === '') { return departments }
-                return departments.filter(function (department) {
-                    return department.name.indexOf(name) > 0
+            searchByName: function(employees, str) {
+                if (str === undefined || str === '') { return employees }
+                let regexp = new RegExp(str, 'i')
+                return employees.filter(function (employee) {
+                    return regexp.test(employee.name)
                 })
-            },
+            }
         }
     }
 </script>

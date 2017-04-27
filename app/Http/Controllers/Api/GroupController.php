@@ -17,9 +17,11 @@ class GroupController extends Controller
     public function index(int $year, int $month)
     {
         $groups = GroupRepository::getGroupsByTargetDate($year, $month);
-
         return response()->json(
-            $groups
+            [
+                'groupList' => $groups,
+                'canEdit' => 0,
+            ]
         );
     }
 

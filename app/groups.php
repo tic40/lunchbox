@@ -11,4 +11,9 @@ class groups extends Model
     {
         return $this->hasMany('App\group_members', 'group_id');
     }
+
+    public function employees()
+    {
+        return $this->belongsToMany('App\employees', 'group_members', 'group_id', 'employee_id');
+    }
 }

@@ -18,7 +18,7 @@ class GroupsTableSeeder extends Seeder
         for ($i = 1; $i <= 3; $i++) {
             for ($j = 1; $j <= 10; $j++) {
                 DB::table('groups')->insert([
-                    'name' => $faker->firstNameMale,
+                    'name' => $j,
                     'target_date' => $dt->firstOfMonth(),
                 ]);
             }
