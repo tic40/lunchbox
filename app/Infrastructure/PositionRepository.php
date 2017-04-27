@@ -6,6 +6,7 @@ class PositionRepository
     public static function getPositions()
     {
         $positions = \App\positions::all();
+        $positionEntities = [];
         foreach ($positions as $position) {
             $positionEntities[] = static::setPositionEntity($position);
         }
@@ -13,8 +14,8 @@ class PositionRepository
         return $positionEntities;
     }
 
-    public static function getPosition( $id ) {
-        $position = \App\positions::find( $id );
+    public static function getPosition(int $id) {
+        $position = \App\positions::find($id);
         return static::setPositionEntity($position);
     }
 

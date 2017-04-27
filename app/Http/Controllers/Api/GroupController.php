@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\GenerateGroup;
+use App\Infrastructure\GroupRepository;
 
 class GroupController extends Controller
 {
@@ -13,8 +14,13 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(int $year, int $month)
     {
+        $groups = GroupRepository::getGroupsByTargetDate($year, $month);
+
+        return response()->json(
+            $groups
+        );
     }
 
     /**

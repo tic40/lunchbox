@@ -11639,6 +11639,7 @@ if (document.querySelector('#group')) {
             });
             __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["e" /* getGroupList */])(this.getYear, this.getMonth).then(function (response) {
                 _this7.groupList = response;
+                console.log(response);
             });
         },
         computed: {
@@ -13085,6 +13086,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
 //
 //
 //
@@ -33412,10 +33414,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "list-group col-md-6"
     }, [_c('li', {
       staticClass: "list-group-item disabled"
-    }, [_vm._v("GROUP " + _vm._s(groupListKey + 1))]), _vm._v(" "), _vm._l((group), function(employee, groupKey) {
+    }, [_vm._v("GROUP: " + _vm._s(group.name))]), _vm._v(" "), _vm._l((group.groupMembers), function(member, groupKey) {
       return _c('li', {
         staticClass: "list-group-item"
-      }, [_vm._v("\n            " + _vm._s(groupKey + 1) + ". " + _vm._s(employee.name) + "\n            "), (groupKey == 0) ? _c('i', {
+      }, [_vm._v("\n" + _vm._s(member) + "\n                " + _vm._s(groupKey + 1) + ". " + _vm._s(member.name) + "\n                "), (groupKey == 0) ? _c('i', {
         staticClass: "fa fa-star-o text-success",
         attrs: {
           "aria-hidden": "true"

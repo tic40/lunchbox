@@ -13,14 +13,10 @@ class PositionsTableSeeder extends Seeder
     {
         $faker = Faker\Factory::create();
 
-        for($i = 1; $i <= 4; $i++) {
-            for($j = 1; $j <= 3; $j++) {
-                DB::table('positions')->insert([
-                    'name' => "G{$i}-{$j}",
-                    'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                    'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                ]);
-            }
+        for($i = 1; $i <= 6; $i++) {
+            DB::table('positions')->insert([
+                'name' => "G{$i}",
+            ]);
         }
     }
 }

@@ -6,6 +6,7 @@ class DepartmentRepository
     public static function getDepartments()
     {
         $departments = \App\departments::all();
+        $departmentEntities = [];
         foreach ($departments as $department) {
             $departmentEntities[] = static::setDepartmentEntity($department);
         }

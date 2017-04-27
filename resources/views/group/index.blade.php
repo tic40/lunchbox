@@ -1,15 +1,12 @@
 @extends('layouts.app')
-
 @section('content')
 <div id="group" class="container" v-cloak>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
+            <!-- list -->
             <div v-if="currentView === viewType.list">
-
-                <!-- actions -->
                 <div v-if="isLogin">
-
                     <div v-if="groupList">
                         <button type="button" class="btn btn-success" @click="clickReCreate(getYear, getMonth)">re-create</button>
                         <button type="button" class="btn btn-danger" @click="clickDelete">delete</button>
@@ -35,6 +32,7 @@
                     </div>
             </div>
 
+            <!-- create -->
             <div v-else-if="currentView === viewType.create">
                 <h3>Create Group List For <strong>@{{yearMonth}}</strong></h3>
                 <form v-on:submit.prevent="submitCreate()">
@@ -59,6 +57,7 @@
                 </div>
             </div>
 
+            <!-- delete -->
             <div v-else-if="currentView === viewType.delete">
                 <h3>Create Group List For <strong>@{{yearMonth}}</strong></h3>
                 <section>

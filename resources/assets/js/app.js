@@ -242,6 +242,7 @@ if (document.querySelector('#group')) {
             getGroupList(this.getYear, this.getMonth)
             .then(response => {
                 this.groupList = response
+                console.log(response)
             })
         },
         computed: {
