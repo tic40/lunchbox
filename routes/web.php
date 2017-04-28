@@ -43,3 +43,5 @@ Route::delete('/api/position/{id}', 'Api\PositionController@destroy');
 
 Route::get('/api/group/{year}/{month}/list', 'Api\GroupController@index');
 Route::get('/api/group/{year}/{month}/create/{groupNumber}', 'Api\GroupController@create');
+Route::post('/api/group/{year}/{month}', 'Api\GroupController@store');
+Route::delete('/api/group/{year}/{month}', 'Api\GroupController@delete');

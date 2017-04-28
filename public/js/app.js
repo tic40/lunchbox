@@ -11620,11 +11620,12 @@ if (document.querySelector('#group')) {
             isLogin: 0,
             viewType: viewType,
             currentView: viewType.list,
-            groupList: null,
+            groupList: [],
             generatedGroupList: null,
             currentDate: new Date(),
             yearMonth: '0000-00',
-            groupNumber: 4,
+            groupNumber: null,
+            canEditGroupList: false,
             isLoading: false
         },
         components: {
@@ -11634,12 +11635,16 @@ if (document.querySelector('#group')) {
             var _this7 = this;
 
             this.yearMonth = this.getCurrentYearMonth();
+
             __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["a" /* checkAuth */])().then(function (response) {
                 _this7.isLogin = response.isLogin;
             });
+
             __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["e" /* getGroupList */])(this.getYear, this.getMonth).then(function (response) {
-                _this7.groupList = response;
-                console.log(response);
+                if (response.groupList !== undefined && response.groupList.length > 0) {
+                    _this7.groupList = response.groupList;
+                    _this7.canEditGroupList = response.canEdit;
+                }
             });
         },
         computed: {
@@ -11654,9 +11659,18 @@ if (document.querySelector('#group')) {
             yearMonth: function yearMonth(val, oldVal) {
                 var _this8 = this;
 
+                if (val === '' || val == undefined) {
+                    this.groupList = null;
+                    return;
+                }
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["e" /* getGroupList */])(this.getYear, this.getMonth).then(function (response) {
-                    console.log('get new group list' + val);
-                    _this8.groupList = response;
+                    if (response.groupList !== undefined && response.groupList.length > 0) {
+                        _this8.groupList = response.groupList;
+                        _this8.canEditGroupList = response.canEdit;
+                    } else {
+                        _this8.groupList = null;
+                        _this8.canEditGroupList = false;
+                    }
                 });
             }
         },
@@ -11670,10 +11684,16 @@ if (document.querySelector('#group')) {
                 if (type == this.viewType.list) {
                     this.loading(true);
                     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["e" /* getGroupList */])(this.getYear, this.getMonth).then(function (response) {
-                        _this9.groupList = response;
-                        _this9.currentView = type;
-                        _this9.loading(false);
+                        if (response.groupList !== undefined && response.groupList.length > 0) {
+                            _this9.groupList = response.groupList;
+                            _this9.canEditGroupList = response.canEdit;
+                        } else {
+                            _this9.groupList = null;
+                            _this9.canEditGroupList = false;
+                        }
                     });
+                    this.currentView = type;
+                    this.loading(false);
                 } else {
                     this.currentView = type;
                     this.loading(false);
@@ -12763,6 +12783,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'department-list',
@@ -12784,12 +12806,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$emit('set-selected-department', index);
             this.$emit('change-view', this.viewType.delete);
         },
-        searchByName: function searchByName(departments, name) {
-            if (name === undefined || name === '') {
-                return departments;
+        searchByName: function searchByName(employees, str) {
+            if (str === undefined || str === '') {
+                return employees;
             }
-            return departments.filter(function (department) {
-                return department.name.indexOf(name) > 0;
+            var regexp = new RegExp(str, 'i');
+            return employees.filter(function (employee) {
+                return regexp.test(employee.name);
             });
         }
     }
@@ -13048,12 +13071,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'employee-list',
     data: function data() {
         return {
-            searchName: ''
+            search: {
+                name: '',
+                department: '',
+                position: ''
+            }
         };
     },
     props: ['employees', 'isLogin', 'viewType'],
@@ -13069,12 +13098,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$emit('set-selected-employee', index);
             this.$emit('change-view', this.viewType.delete);
         },
-        searchByName: function searchByName(employees, name) {
-            if (name === undefined || name === '') {
+        resetSearchForm: function resetSearchForm() {
+            this.search.name = '';
+            this.search.department = '';
+            this.search.position = '';
+        },
+        listFilter: function listFilter(employees, name, department, position) {
+            if ((name === undefined || name === '') && (department === undefined || department === '') && (position === undefined || position === '')) {
                 return employees;
             }
+            var regexpName = new RegExp(name, 'i');
+            var regexpDepartment = new RegExp(department, 'i');
+            var regexpPosition = new RegExp(position, 'i');
             return employees.filter(function (employee) {
-                return employee.name.indexOf(name) > 0;
+                return regexpName.test(employee.name) && regexpDepartment.test(employee.departmentName) && regexpPosition.test(employee.positionName);
             });
         }
     }
@@ -13086,7 +13123,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
 //
 //
 //
@@ -13308,6 +13344,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'position-list',
@@ -13329,12 +13367,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$emit('set-selected-position', index);
             this.$emit('change-view', this.viewType.delete);
         },
-        searchByName: function searchByName(positions, name) {
-            if (name === undefined || name === '') {
-                return positions;
+        searchByName: function searchByName(employees, str) {
+            if (str === undefined || str === '') {
+                return employees;
             }
-            return positions.filter(function (position) {
-                return position.name.indexOf(name) > 0;
+            var regexp = new RegExp(str, 'i');
+            return employees.filter(function (employee) {
+                return regexp.test(employee.name);
             });
         }
     }
@@ -33417,8 +33456,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v("GROUP: " + _vm._s(group.name))]), _vm._v(" "), _vm._l((group.groupMembers), function(member, groupKey) {
       return _c('li', {
         staticClass: "list-group-item"
-      }, [_vm._v("\n" + _vm._s(member) + "\n                " + _vm._s(groupKey + 1) + ". " + _vm._s(member.name) + "\n                "), (groupKey == 0) ? _c('i', {
-        staticClass: "fa fa-star-o text-success",
+      }, [_vm._v("\n            " + _vm._s(groupKey + 1) + ". " + _vm._s(member.name) + "\n            "), (member.isLeader == 1) ? _c('i', {
+        staticClass: "fa fa-star-o text-danger",
         attrs: {
           "aria-hidden": "true"
         }
@@ -33449,11 +33488,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("new position")]) : _vm._e(), _vm._v(" "), _c('h3', [_vm._v("Position List")]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
-  }, [_c('label', {
-    attrs: {
-      "for": "searchName"
-    }
-  }, [_vm._v("search by name ")]), _vm._v(" "), _c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -33462,7 +33497,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     attrs: {
       "type": "text",
-      "id": "searchName"
+      "id": "searchName",
+      "placeholder": "search name"
     },
     domProps: {
       "value": (_vm.searchName)
@@ -33473,7 +33509,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.searchName = $event.target.value
       }
     }
-  })]), _vm._v(" "), _c('table', {
+  }), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-sm btn-default",
+    attrs: {
+      "type": "text"
+    },
+    on: {
+      "click": function($event) {
+        _vm.searchName = ''
+      }
+    }
+  }, [_vm._v("reset")])]), _vm._v(" "), _c('table', {
     staticClass: "table"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.searchByName(_vm.positions, _vm.searchName)), function(position, index) {
     return _c('tr', [_c('th', {
@@ -33494,14 +33540,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.clickEdit(index)
         }
       }
-    }, [_vm._m(1, true)]), _vm._v(" "), _c('button', {
-      staticClass: "btn btn-link",
-      on: {
-        "click": function($event) {
-          _vm.clickDelete(index)
-        }
-      }
-    }, [_vm._m(2, true)])]) : _vm._e()])
+    }, [_vm._m(1, true)])]) : _vm._e()])
   }))])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_vm._v("ID")]), _vm._v(" "), _c('th', [_vm._v("Name")])])])
@@ -33514,15 +33553,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "aria-hidden": "true"
     }
   }), _vm._v(" edit")])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('span', {
-    staticClass: "text-muted"
-  }, [_c('i', {
-    staticClass: "fa fa-close",
-    attrs: {
-      "aria-hidden": "true"
-    }
-  }), _vm._v(" delete")])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -33832,33 +33862,80 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("new employee")]) : _vm._e(), _vm._v(" "), _c('h3', [_vm._v("Employee List")]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
-  }, [_c('label', {
-    attrs: {
-      "for": "search-name"
-    }
-  }, [_vm._v("search by name ")]), _vm._v(" "), _c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.searchName),
-      expression: "searchName"
+      value: (_vm.search.name),
+      expression: "search.name"
     }],
     attrs: {
       "type": "text",
-      "id": "search-name"
+      "id": "search-name",
+      "placeholder": "search name"
     },
     domProps: {
-      "value": (_vm.searchName)
+      "value": (_vm.search.name)
     },
     on: {
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.searchName = $event.target.value
+        _vm.search.name = $event.target.value
       }
     }
-  })]), _vm._v(" "), _c('table', {
+  }), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.search.department),
+      expression: "search.department"
+    }],
+    attrs: {
+      "type": "text",
+      "id": "search-department",
+      "placeholder": "search department"
+    },
+    domProps: {
+      "value": (_vm.search.department)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.search.department = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.search.position),
+      expression: "search.position"
+    }],
+    attrs: {
+      "type": "text",
+      "id": "search-position",
+      "placeholder": "search position"
+    },
+    domProps: {
+      "value": (_vm.search.position)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.search.position = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default btn-sm",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": _vm.resetSearchForm
+    }
+  }, [_vm._v("reset")])]), _vm._v(" "), _c('table', {
     staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.searchByName(_vm.employees, _vm.searchName)), function(employee, index) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.listFilter(_vm.employees, _vm.search.name, _vm.search.department, _vm.search.position)), function(employee, index) {
     return _c('tr', [_c('th', {
       attrs: {
         "scope": "row"
@@ -33895,7 +33972,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._m(2, true)])]) : _vm._e()])
   }))])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_vm._v("ID")]), _vm._v(" "), _c('th', [_vm._v("Name")]), _vm._v(" "), _c('th', [_vm._v("Department Name")]), _vm._v(" "), _c('th', [_vm._v("Position Name")])])])
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("ID")]), _vm._v(" "), _c('th', [_vm._v("Name")]), _vm._v(" "), _c('th', [_vm._v("Department")]), _vm._v(" "), _c('th', [_vm._v("Position")])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
     staticClass: "text-muted"
@@ -34256,11 +34333,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("new department")]) : _vm._e(), _vm._v(" "), _c('h3', [_vm._v("Department List")]), _vm._v(" "), _c('div', {
     staticClass: "form-group"
-  }, [_c('label', {
-    attrs: {
-      "for": "searchName"
-    }
-  }, [_vm._v("search by name ")]), _vm._v(" "), _c('input', {
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -34269,7 +34342,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     attrs: {
       "type": "text",
-      "id": "searchName"
+      "id": "searchName",
+      "placeholder": "search name"
     },
     domProps: {
       "value": (_vm.searchName)
@@ -34280,7 +34354,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.searchName = $event.target.value
       }
     }
-  })]), _vm._v(" "), _c('table', {
+  }), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-sm btn-default",
+    attrs: {
+      "type": "text"
+    },
+    on: {
+      "click": function($event) {
+        _vm.searchName = ''
+      }
+    }
+  }, [_vm._v("reset")])]), _vm._v(" "), _c('table', {
     staticClass: "table"
   }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.searchByName(_vm.departments, _vm.searchName)), function(department, index) {
     return _c('tr', [_c('th', {
@@ -34301,14 +34385,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.clickEdit(index)
         }
       }
-    }, [_vm._m(1, true)]), _vm._v(" "), _c('button', {
-      staticClass: "btn btn-link",
-      on: {
-        "click": function($event) {
-          _vm.clickDelete(index)
-        }
-      }
-    }, [_vm._m(2, true)])]) : _vm._e()])
+    }, [_vm._m(1, true)])]) : _vm._e()])
   }))])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('thead', [_c('tr', [_c('th', [_vm._v("ID")]), _vm._v(" "), _c('th', [_vm._v("Name")])])])
@@ -34321,15 +34398,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "aria-hidden": "true"
     }
   }), _vm._v(" edit")])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('span', {
-    staticClass: "text-muted"
-  }, [_c('i', {
-    staticClass: "fa fa-close",
-    attrs: {
-      "aria-hidden": "true"
-    }
-  }), _vm._v(" delete")])
 }]}
 module.exports.render._withStripped = true
 if (false) {

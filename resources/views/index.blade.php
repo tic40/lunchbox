@@ -1,8 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.top')
 @section('content')
     <div class="container">
-        <div class="jumbotron">
-            <h1>{{ config('app.name', 'Laravel') }}</h1>
-        </div>
+        <div>{{ config('app.name', 'Laravel') }}</h1>
     </div>
 @endsection

@@ -7,12 +7,12 @@
             <!-- list -->
             <div v-if="currentView === viewType.list">
                 <div v-if="isLogin">
-                    <div v-if="groupList && canEditGroupList">
+                    <div v-if="canEditGroupList">
                         <button type="button" style="margin-left:0.4em" class="btn btn-danger pull-right" @click="clickDelete">delete</button>
                         <button type="button" class="btn btn-success pull-right" @click="clickCreate(getYear, getMonth)">re-create</button>
                     </div>
 
-                    <div v-if="!groupList && yearMonth">
+                    <div v-else-if="!groupList && yearMonth">
                         <button type="button" class="btn btn-success pull-right" @click="clickCreate(getYear, getMonth)">create</button>
                     </div>
                 </div>

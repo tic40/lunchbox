@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\GenerateGroup;
 use App\Infrastructure\GroupRepository;
+use App\Infrastructure\GroupMemberRepository;
 
 class GroupController extends Controller
 {
@@ -17,10 +18,15 @@ class GroupController extends Controller
     public function index(int $year, int $month)
     {
         $groups = GroupRepository::getGroupsByTargetDate($year, $month);
+        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+        $current = \Carbon\Carbon::now();
+        $current->day = 1;
+        $canEdit = ($targetDate < $current) ? 1 : 0;
+
         return response()->json(
             [
                 'groupList' => $groups,
-                'canEdit' => 0,
+                'canEdit' => $canEdit,
             ]
         );
     }
@@ -44,9 +50,13 @@ class GroupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(int $year, int $month, Request $request)
     {
-        //
+        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+/*
+        $group_members = $request[];
+        $group_members = $request[];
+*/
     }
 
     /**
@@ -89,7 +99,7 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $year, int $month)
     {
         //
     }

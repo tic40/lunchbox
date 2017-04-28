@@ -18,4 +18,19 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+
+    <style>
+        .bg {
+            /* The image used */
+            background-image: url("img/lunch_bg.jpg");
+
+            /* Full height */
+            height: 100%;
+
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
 </head>
