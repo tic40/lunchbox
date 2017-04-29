@@ -7,33 +7,20 @@
             <!-- list -->
             <div v-if="currentView === viewType.list">
                 <div v-if="isLogin">
-                    <div v-if="canEditGroupList">
+                    <div v-if="groupList.length > 0">
                         <button type="button" style="margin-left:0.4em" class="btn btn-danger pull-right" @click="clickDelete">delete</button>
-                        <button type="button" class="btn btn-success pull-right" @click="clickCreate(getYear, getMonth)">re-create</button>
                     </div>
 
-                    <div v-else-if="!groupList && yearMonth">
+                    <div v-else-if="groupList.length == 0 && yearMonth">
                         <button type="button" class="btn btn-success pull-right" @click="clickCreate(getYear, getMonth)">create</button>
                     </div>
                 </div>
 
                 <h3>Group List of <input id="date" type="month" v-model="yearMonth"></h3>
-                    <div v-if="groupList">
-                        <group-list :group-list="groupList"></group-list>
-                    </div>
-
-                    <div v-else-if="!yearMonth">
-                        <div class="alert alert-warning" key="emptyGroupList">
-                            <p>please set the date.</p>
-                        </div>
-                    </div>
-
-                    <div v-else>
-                        <div class="alert alert-warning" key="emptyGroupList">
-                            <p>The group of this month has not been generated yet.</p>
-                            <p v-if="isLogin">Please create group of the month.</p>
-                        </div>
-                    </div>
+                <group-list
+                    :group-list="groupList"
+                    :year-month="yearMonth">
+                </group-list>
             </div>
 
             <!-- create -->

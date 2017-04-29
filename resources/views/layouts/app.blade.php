@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 @include('layouts.partials.head')
-<style>
-    [v-cloak] {
-        display: none;
-    }
-</style>
 <body>
     <div id="app">
         @include('layouts.partials.navi')

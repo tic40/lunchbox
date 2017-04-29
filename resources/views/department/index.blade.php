@@ -7,6 +7,7 @@
             <!-- list -->
             <div v-if="currentView === viewType.list">
                 <department-list
+                    v-if="!isLoading"
                     :departments="departments"
                     :view-type="viewType"
                     :is-login="isLogin"

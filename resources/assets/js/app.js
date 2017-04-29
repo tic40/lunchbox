@@ -37,7 +37,6 @@ const viewType = {
  * employee
  */
 if (document.querySelector('#employee')) {
-
     const employee = new Vue({
         el: '#employee',
         data: {
@@ -57,21 +56,19 @@ if (document.querySelector('#employee')) {
             EmployeeDelete
         },
         created: function() {
-            checkAuth()
-            .then(response => {
-                this.isLogin = response.isLogin
-            })
-            getEmployees()
-            .then(response => {
-                this.employees = response
-            }),
-            getDepartments()
-            .then(response => {
-                this.departments = response
-            })
-            getPositions()
-            .then(response => {
-                this.positions = response
+            this.loading(true)
+            Promise.all([
+                checkAuth(),
+                getEmployees(),
+                getDepartments(),
+                getPositions(),
+            ])
+            .then(responses => {
+                this.isLogin = responses[0].isLogin
+                this.employees = responses[1]
+                this.departments = responses[2]
+                this.positions = responses[3]
+                this.loading(false)
             })
         },
         methods: {
@@ -121,13 +118,15 @@ if (document.querySelector('#department')) {
             DepartmentDelete
         },
         created: function() {
-            checkAuth()
-            .then(response => {
-                this.isLogin = response.isLogin
-            })
-            getDepartments()
-            .then(response => {
-                this.departments = response
+            this.loading(true)
+            Promise.all([
+                checkAuth(),
+                getDepartments(),
+            ])
+            .then(responses => {
+                this.isLogin = responses[0].isLogin
+                this.departments = responses[1]
+                this.loading(false)
             })
         },
         methods: {
@@ -178,13 +177,15 @@ if (document.querySelector('#position')) {
             PositionDelete
         },
         created: function() {
-            checkAuth()
-            .then(response => {
-                this.isLogin = response.isLogin
-            })
-            getPositions()
-            .then(response => {
-                this.positions = response
+            this.loading(true)
+            Promise.all([
+                checkAuth(),
+                getPositions(),
+            ])
+            .then(responses => {
+                this.isLogin = responses[0].isLogin
+                this.positions = responses[1]
+                this.loading(false)
             })
         },
         methods: {
@@ -224,7 +225,7 @@ if (document.querySelector('#group')) {
             viewType: viewType,
             currentView: viewType.list,
             groupList: [],
-            generatedGroupList: null,
+            generatedGroupList: [],
             currentDate: new Date(),
             yearMonth: '0000-00',
             groupNumber: null,
@@ -235,19 +236,16 @@ if (document.querySelector('#group')) {
             GroupList
         },
         created: function() {
+            this.loading(true)
             this.yearMonth = this.getCurrentYearMonth()
-
-            checkAuth()
-            .then(response => {
-                this.isLogin = response.isLogin
-            })
-
-            getGroupList(this.getYear, this.getMonth)
-            .then(response => {
-                if (response.groupList !== undefined && response.groupList.length > 0) {
-                    this.groupList = response.groupList
-                    this.canEditGroupList = response.canEdit
-                }
+            Promise.all([
+                checkAuth(),
+                getGroupList(this.getYear, this.getMonth)
+            ])
+            .then(responses => {
+                this.isLogin = responses[0].isLogin
+                this.groupList = responses[1]
+                this.loading(false)
             })
         },
         computed: {
@@ -261,18 +259,12 @@ if (document.querySelector('#group')) {
         watch: {
             yearMonth: function (val, oldVal) {
                 if (val === '' || val == undefined) {
-                    this.groupList = null
+                    this.groupList = []
                     return
                 }
                 getGroupList(this.getYear, this.getMonth)
                 .then(response => {
-                    if (response.groupList !== undefined && response.groupList.length > 0) {
-                        this.groupList = response.groupList
-                        this.canEditGroupList = response.canEdit
-                    } else {
-                        this.groupList = null
-                        this.canEditGroupList = false
-                    }
+                    this.groupList = response
                 })
             }
         },
@@ -288,13 +280,7 @@ if (document.querySelector('#group')) {
                     this.loading(true)
                     getGroupList(this.getYear, this.getMonth)
                     .then(response => {
-                        if (response.groupList !== undefined && response.groupList.length > 0) {
-                            this.groupList = response.groupList
-                            this.canEditGroupList = response.canEdit
-                        } else {
-                            this.groupList = null
-                            this.canEditGroupList = false
-                        }
+                       this.groupList = response
                     })
                     this.currentView = type
                     this.loading(false)
@@ -304,7 +290,7 @@ if (document.querySelector('#group')) {
                 }
             },
             clickCreate: function(year, month) {
-                this.generatedGroupList = null;
+                this.generatedGroupList = [];
                 this.changeView(this.viewType.create)
             },
             clickDelete: function() {

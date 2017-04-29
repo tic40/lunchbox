@@ -17,17 +17,8 @@ class GroupController extends Controller
      */
     public function index(int $year, int $month)
     {
-        $groups = GroupRepository::getGroupsByTargetDate($year, $month);
-        $targetDate = \Carbon\Carbon::create($year, $month, 1);
-        $current = \Carbon\Carbon::now();
-        $current->day = 1;
-        $canEdit = ($targetDate < $current) ? 1 : 0;
-
         return response()->json(
-            [
-                'groupList' => $groups,
-                'canEdit' => $canEdit,
-            ]
+            GroupRepository::getGroupsByTargetDate($year, $month)
         );
     }
 
