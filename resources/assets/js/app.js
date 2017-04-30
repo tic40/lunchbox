@@ -13,6 +13,7 @@ import {
 } from './api'
 
 // components
+import Modal from './components/Modal.vue'
 import EmployeeList from './components/employee/EmployeeList.vue'
 import EmployeeCreate from './components/employee/EmployeeCreate.vue'
 import EmployeeEdit from './components/employee/EmployeeEdit.vue'
@@ -234,10 +235,12 @@ if (document.querySelector(appIds.group)) {
             currentDate: new Date(),
             yearMonth: '0000-00',
             groupNumber: null,
+            showCreateConfirmModal: false,
             isLoading: false
         },
         components: {
-            GroupList
+            GroupList,
+            Modal
         },
         created: function() {
             this.loading(true)
@@ -309,6 +312,7 @@ if (document.querySelector(appIds.group)) {
                 })
             },
             submitCreate: function(year, month, groupList) {
+                this.showCreateConfirmModal = false
                 createGroup(year, month, {
                     groupList: groupList
                 })

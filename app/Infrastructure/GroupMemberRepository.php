@@ -26,6 +26,8 @@ class GroupMemberRepository
                     'group_id' => $insertedGroups[$groupListKey]->id,
                     'employee_id' => $member['id'],
                     'is_leader' => $member['isLeader'],
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now(),
                 ];
             }
         }

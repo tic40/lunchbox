@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="groupList.length > 0">
-            <button type="button" class="btn btn-link" @click="openSearch = !openSearch"><i class="fa fa-plus" aria-hidden="true"></i> GROUP SEARCH</button>
+            <button type="button" class="btn btn-link btn-sm" @click="openSearch = !openSearch"><i class="fa fa-plus" aria-hidden="true"></i> SEARCH</button>
             <div v-if="openSearch">
                 <input type="text" id="search-group-name" v-model="search.groupName" placeholder="group name">
                 <input type="text" id="search-employee-name" v-model="search.employeeName" placeholder="employee name">
@@ -10,7 +10,7 @@
                 <button type="button" class="btn btn-default btn-sm" @click="resetSearchForm">reset</button>
             </div>
 
-            <div style="margin-top: 1em">
+            <div>
                 <p>
                     <i class="fa fa-star-o text-danger" aria-hidden="true"></i>: group leader
                 </p>

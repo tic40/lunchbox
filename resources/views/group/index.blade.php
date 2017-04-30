@@ -31,31 +31,32 @@
 
             <!-- create -->
             <div v-else-if="currentView === viewType.create">
+                <modal
+                    v-if="showCreateConfirmModal"
+                    @submit="submitCreate(getYear, getMonth, generatedGroupList)"
+                    @close="showCreateConfirmModal = false">
+                    <p slot="header">Are you sure to submit the group for @{{yearMonth}}?</p>
+                </modal>
+
                 <h3>Create Group List For <strong>@{{yearMonth}}</strong></h3>
-                <form v-on:submit.prevent="submitCreate(getYear, getMonth, generatedGroupList)">
-
-                    <div class="form-group">
-                        <label for="generate-group-number">group number</label>
-                        <input type="number" id="generate-group-number" v-model="groupNumber" placeholder="group number">
-                        <button type="button" class="btn btn-default btn-success" @click="clickGenerate(getYear, getMonth, groupNumber)" :disabled="isLoading || groupNumber <= 0">
-                            <span v-if="generatedGroupList.length > 0">Re-Generate</span>
-                            <span v-else>Generate</span>
-                        </button>
-                    </div>
-
-                    <button type="submit" class="btn btn-default btn-primary" :disabled="isLoading || generatedGroupList.length <= 0">
+                <div class="form-group">
+                    <input type="number" id="generate-group-number" max="100" v-model="groupNumber" placeholder="group number" required>
+                    <button type="button" class="btn btn-default btn-success" @click="clickGenerate(getYear, getMonth, groupNumber)" :disabled="isLoading || groupNumber <= 0">
+                        <span v-if="generatedGroupList.length > 0">Re-Generate</span>
+                        <span v-else>Generate</span>
+                    </button>
+                    <button v-if="generatedGroupList.length > 0" type="button" class="btn btn-default btn-primary" @click="showCreateConfirmModal = true" :disabled="isLoading">
                         Submit
                     </button>
                     <button type="button" class="btn btn-default" @click="changeView(viewType.list)" :disabled="isLoading">
                         Cancel
                     </button>
-                </form>
-                <div style="margin-top:2em">
-                    <group-list
-                        :group-list="generatedGroupList"
-                        :year-month="yearMonth">
-                    </group-list>
                 </div>
+
+                <group-list
+                    :group-list="generatedGroupList"
+                    :year-month="yearMonth">
+                </group-list>
             </div>
 
             <!-- delete -->
@@ -72,7 +73,7 @@
                         </button>
                     </div>
 
-                    <div style="margin-top:2em">
+                    <div style="margin-top:1em">
                         <group-list
                             :group-list="groupList"
                             :year-month="yearMonth">

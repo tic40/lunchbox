@@ -36,7 +36,9 @@ class GroupRepository
         foreach ($groupList as $v) {
             $insertion[] = [
                 'name' => $v['name'],
-                'target_date' => $targetDate->format('Y-m-d')
+                'target_date' => $targetDate->format('Y-m-d'),
+                'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now(),
             ];
         }
         return \App\groups::insert($insertion);
