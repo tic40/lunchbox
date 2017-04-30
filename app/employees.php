@@ -15,4 +15,14 @@ class employees extends Model
     {
         return $this->belongsTo('App\positions', 'position_id');
     }
+
+    public function group_members()
+    {
+        return $this->belongsTo('App\group_members', 'id', 'employee_id');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany('App\groups', 'group_members', 'employee_id', 'group_id');
+    }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div id="employee" class="container" v-cloak>
+<div id="app-employee" class="container" v-cloak>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 

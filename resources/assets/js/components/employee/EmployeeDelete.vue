@@ -12,8 +12,8 @@
             </div>
 
             <div style="margin-top: 2em">
-                <button class="btn btn-default btn-primary" @click="submitDelete(employee)" :disabled="isLoading">
-                    Submit
+                <button class="btn btn-default btn-danger" @click="submitDelete(employee)" :disabled="isLoading">
+                    Delete
                 </button>
                 <button type="button" class="btn btn-default" @click="changeView(viewType.list)" :disabled="isLoading">
                     Cancel

@@ -18,7 +18,6 @@ class GroupRepository
         $targetDate = \Carbon\Carbon::create($year, $month, 1);
         $groups = \App\groups::where('target_date', $targetDate->format('Y-m-d'))
             ->get();
-
         $groupEntities = [];
         foreach ($groups as $group) {
             $groupEntities[] = static::setGroupEntity($group);
@@ -31,24 +30,22 @@ class GroupRepository
         return static::setGroupEntity($group);
     }
 
-    public static function storeGroup($request) {
-        $group = new \App\groups;
-        $group->name = $request['name'];
-        $group->targetDate = $request['target_date'];
-        return $group->save();
+    public static function storeGroups(int $year, int $month, array $groupList) {
+        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+        $insertion = [];
+        foreach ($groupList as $v) {
+            $insertion[] = [
+                'name' => $v['name'],
+                'target_date' => $targetDate->format('Y-m-d')
+            ];
+        }
+        return \App\groups::insert($insertion);
     }
 
-/*
-    public static function updateGroup($request, int $id) {
-        $group = \App\groups::find($id);
-        $group->name = $request['name'];
-        return $group->save();
-    }
-*/
-
-    public static function deleteGroup(int $id) {
-        $group = \App\groups::find($id);
-        return $group->delete();
+    public static function deleteGroupsByTargetDate(int $year, int $month) {
+        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+        return \App\groups::where('target_date', $targetDate->format('Y-m-d'))
+            ->delete();
     }
 
     private static function setGroupEntity(\App\groups $group)
@@ -58,11 +55,13 @@ class GroupRepository
         $groupEntity->name = $group->name;
         $groupEntity->targetDate = $group->target_date;
         $groupEntity->groupMembers = [];
-        foreach($group->group_members as $key => $member) {
-            $ary = [];
-            $ary['name'] = $group->employees[$key]['name'];
-            $ary['isLeader'] = $member['is_leader'];
-            $groupEntity->groupMembers[] = $ary;
+        foreach($group->employees as $key => $employee) {
+            $member = [];
+            $member['name'] = $employee['name'];
+            $member['departmentName'] = $employee->departments['name'];
+            $member['positionName'] = $employee->positions['name'];
+            $member['isLeader'] = $employee->group_members['is_leader'];
+            $groupEntity->groupMembers[] = $member;
         }
         return $groupEntity;
     }

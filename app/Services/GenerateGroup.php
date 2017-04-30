@@ -9,7 +9,7 @@ class GenerateGroup
 {
     private $groupsCount;
 
-    public function execute(int $groupNumber): array
+    public function execute(int $groupNumber)
     {
         $employeeEntities = EmployeeRepository::getEmployees();
         $groupList = [];
@@ -17,6 +17,8 @@ class GenerateGroup
             $groupList[$i] = [];
         }
 
+
+        // TODO: implement group algorithm
         shuffle($employeeEntities);
         $i = 0;
         foreach($employeeEntities as $employee) {
@@ -28,7 +30,12 @@ class GenerateGroup
         $returnList = [];
         foreach($groupList as $groupListKey => $group) {
             foreach($group as $groupKey => $member) {
-                $returnList[$groupListKey]['name'] = $groupListKey+1;
+                // create group name by alphabet pattern
+                $groupName = (0 < intval($groupListKey/26))
+                    ? chr(65+intval($groupListKey/26)) . chr(65+($groupListKey%26))
+                    : chr(65+($groupListKey%26));
+
+                $returnList[$groupListKey]['name'] = $groupName;
                 $member->isLeader = ($groupKey == 0) ? 1 : 0;
                 $returnList[$groupListKey]['groupMembers'][] = $member;
             }

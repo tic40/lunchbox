@@ -7,8 +7,8 @@
             <p>id: {{position.id}}</p>
             <p>name: {{position.name}}</p>
 
-            <button class="btn btn-default btn-primary" @click="submitDelete(position)" :disabled="isLoading">
-                Submit
+            <button class="btn btn-default btn-danger" @click="submitDelete(position)" :disabled="isLoading">
+                Delete
             </button>
             <button class="btn btn-default" @click="changeView(viewType.list)" :disabled="isLoading">
                 Cancel

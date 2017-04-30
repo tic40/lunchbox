@@ -18,10 +18,18 @@ class GroupMemberRepository
         return static::setGroupMemberEntity($groupMember);
     }
 
-    public static function storeGroupMember($request) {
-        $groupMember = new \App\group_members;
-        $groupMember->name = $request['name'];
-        return $groupMember->save();
+    public static function storeGroupMembers(array $groupList, array $insertedGroups) {
+        $insertion = [];
+        foreach ($groupList as $groupListKey => $group) {
+            foreach ($group['groupMembers'] as $member) {
+                $insertion[] = [
+                    'group_id' => $insertedGroups[$groupListKey]->id,
+                    'employee_id' => $member['id'],
+                    'is_leader' => $member['isLeader'],
+                ];
+            }
+        }
+        return \App\group_members::insert($insertion);
     }
 
     public static function updateGroupMember($request, int $id) {
@@ -30,9 +38,11 @@ class GroupMemberRepository
         return $groupMember->save();
     }
 
-    public static function deleteGroupMember(int $id) {
-        $groupMember = \App\group_members::find($id);
-        return $groupMember->delete();
+    public static function deleteGroupMembersByTargetDate(int $year, int $month) {
+        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+        return \App\group_members::join('groups', 'group_members.group_id', '=', 'groups.id')
+            ->where('groups.target_date', $targetDate->format('Y-m-d'))
+            ->delete();
     }
 
     private static function setGroupMemberEntity(\App\group_members $groupMember)

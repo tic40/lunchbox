@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div id="group" class="container" v-cloak>
+<div id="app-group" class="container" v-cloak>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
@@ -16,8 +16,14 @@
                     </div>
                 </div>
 
-                <h3>Group List of <input id="date" type="month" v-model="yearMonth"></h3>
+                <h3>Group List for @{{yearMonth}}</h3>
+                <div class="form-group">
+                    <input id="date" type="month" v-model="yearMonth">
+                    <button type="button" class="btn btn-default btn-sm" @click="yearMonth = getCurrentYearMonth()">this month</button>
+                </div>
+
                 <group-list
+                    v-if="!isLoading"
                     :group-list="groupList"
                     :year-month="yearMonth">
                 </group-list>
@@ -26,17 +32,18 @@
             <!-- create -->
             <div v-else-if="currentView === viewType.create">
                 <h3>Create Group List For <strong>@{{yearMonth}}</strong></h3>
-                <form v-on:submit.prevent="submitCreate()">
+                <form v-on:submit.prevent="submitCreate(getYear, getMonth, generatedGroupList)">
 
                     <div class="form-group">
                         <label for="generate-group-number">group number</label>
-                        <input type="number" id="generate-group-number" v-model="groupNumber">
+                        <input type="number" id="generate-group-number" v-model="groupNumber" placeholder="group number">
                         <button type="button" class="btn btn-default btn-success" @click="clickGenerate(getYear, getMonth, groupNumber)" :disabled="isLoading || groupNumber <= 0">
-                            Generate
+                            <span v-if="generatedGroupList.length > 0">Re-Generate</span>
+                            <span v-else>Generate</span>
                         </button>
                     </div>
 
-                    <button type="submit" class="btn btn-default btn-primary" :disabled="isLoading || !generatedGroupList">
+                    <button type="submit" class="btn btn-default btn-primary" :disabled="isLoading || generatedGroupList.length <= 0">
                         Submit
                     </button>
                     <button type="button" class="btn btn-default" @click="changeView(viewType.list)" :disabled="isLoading">
@@ -44,27 +51,32 @@
                     </button>
                 </form>
                 <div style="margin-top:2em">
-                    <group-list :group-list="generatedGroupList"></group-list>
+                    <group-list
+                        :group-list="generatedGroupList"
+                        :year-month="yearMonth">
+                    </group-list>
                 </div>
             </div>
 
             <!-- delete -->
             <div v-else-if="currentView === viewType.delete">
-                <h3>Create Group List For <strong>@{{yearMonth}}</strong></h3>
+                <h3>Delete Group List For @{{yearMonth}}</h3>
                 <section>
-                    <strong class="text-danger">Are you sure to delete?</strong>
-
-                    <div style="margin-top: 1em">
-                        todo: display target group list information here.
-                    </div>
-
                     <div style="margin-top: 2em">
-                        <button class="btn btn-default btn-primary" @click="submitDelete()" :disabled="isLoading">
-                            Submit
+                        <p class="text-danger"><strong>Are you sure to delete?</strong></p>
+                        <button class="btn btn-default btn-danger" @click="submitDelete(getYear, getMonth)" :disabled="isLoading">
+                            Delete
                         </button>
                         <button type="button" class="btn btn-default" @click="changeView(viewType.list)" :disabled="isLoading">
                             Cancel
-                        </button :disabled="isLoading">
+                        </button>
+                    </div>
+
+                    <div style="margin-top:2em">
+                        <group-list
+                            :group-list="groupList"
+                            :year-month="yearMonth">
+                        </group-list>
                     </div>
                 </section>
 

@@ -2,7 +2,7 @@
 <html lang="{{ config('app.locale') }}">
 @include('layouts.partials.head')
 <body>
-    <div id="app">
+    <div>
         @include('layouts.partials.navi')
         @yield('content')
     </div>

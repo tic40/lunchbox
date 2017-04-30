@@ -83,3 +83,10 @@ export function getGroupList(year, month) {
 export function getGenerateGroup(year, month, groupNumber) {
     return fetch('api/group/' + year + '/' + month + '/create/' + groupNumber)
 }
+export function createGroup(year, month, request) {
+    return post('api/group/' + year + '/' + month, request)
+}
+export function destroyGroup(year, month) {
+    return destroy('api/group/' + year + '/' + month)
+}
+

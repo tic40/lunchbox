@@ -7,11 +7,12 @@ import {
     getDepartments,
     getPositions,
     getGroupList,
-    getGenerateGroup
+    getGenerateGroup,
+    createGroup,
+    destroyGroup
 } from './api'
 
 // components
-import GroupList from './components/group/GroupList.vue'
 import EmployeeList from './components/employee/EmployeeList.vue'
 import EmployeeCreate from './components/employee/EmployeeCreate.vue'
 import EmployeeEdit from './components/employee/EmployeeEdit.vue'
@@ -24,21 +25,28 @@ import PositionList from './components/position/PositionList.vue'
 import PositionCreate from './components/position/PositionCreate.vue'
 import PositionEdit from './components/position/PositionEdit.vue'
 import PositionDelete from './components/position/PositionDelete.vue'
+import GroupList from './components/group/GroupList.vue'
 
 // constants
 const viewType = {
     list: 1,
     create: 2,
     edit: 3,
-    delete: 4,
-};
+    delete: 4
+}
+const appIds = {
+    employee: '#app-employee',
+    department: '#app-department',
+    position: '#app-position',
+    group: '#app-group'
+}
 
 /**
  * employee
  */
-if (document.querySelector('#employee')) {
-    const employee = new Vue({
-        el: '#employee',
+if (document.querySelector(appIds.employee)) {
+    const appEmployee = new Vue({
+        el: appIds.employee,
         data: {
             isLogin: 0,
             viewType: viewType,
@@ -99,10 +107,9 @@ if (document.querySelector('#employee')) {
 /**
  * department
  */
-if (document.querySelector('#department')) {
-
-    const department = new Vue({
-        el: '#department',
+if (document.querySelector(appIds.department)) {
+    const appDepartment = new Vue({
+        el: appIds.department,
         data: {
             isLogin: 0,
             viewType: viewType,
@@ -158,10 +165,9 @@ if (document.querySelector('#department')) {
 /**
  * position
  */
-if (document.querySelector('#position')) {
-
-    const position = new Vue({
-        el: '#position',
+if (document.querySelector(appIds.position)) {
+    const appPosition = new Vue({
+        el: appIds.position,
         data: {
             isLogin: 0,
             viewType: viewType,
@@ -216,10 +222,9 @@ if (document.querySelector('#position')) {
 /**
  * group
  */
-if (document.querySelector('#group')) {
-
-    const group = new Vue({
-        el: '#group',
+if (document.querySelector(appIds.group)) {
+    const appGroup = new Vue({
+        el: appIds.group,
         data: {
             isLogin: 0,
             viewType: viewType,
@@ -229,7 +234,6 @@ if (document.querySelector('#group')) {
             currentDate: new Date(),
             yearMonth: '0000-00',
             groupNumber: null,
-            canEditGroupList: false,
             isLoading: false
         },
         components: {
@@ -258,17 +262,22 @@ if (document.querySelector('#group')) {
         },
         watch: {
             yearMonth: function (val, oldVal) {
-                if (val === '' || val == undefined) {
-                    this.groupList = []
-                    return
-                }
-                getGroupList(this.getYear, this.getMonth)
-                .then(response => {
-                    this.groupList = response
-                })
+                this.getGroupList()
             }
         },
         methods: {
+            getGroupList: function() {
+                if (this.yearMonth == '' || this.yearMonth == undefined) {
+                    this.groupList = []
+                } else {
+                    this.loading(true)
+                    getGroupList(this.getYear, this.getMonth)
+                    .then(response => {
+                        this.groupList = response
+                        this.loading(false)
+                    })
+                }
+            },
             getCurrentYearMonth: function() {
                 return [
                     this.currentDate.getFullYear(),
@@ -277,13 +286,8 @@ if (document.querySelector('#group')) {
             },
             changeView: function(type) {
                 if (type == this.viewType.list) {
-                    this.loading(true)
-                    getGroupList(this.getYear, this.getMonth)
-                    .then(response => {
-                       this.groupList = response
-                    })
+                    this.getGroupList()
                     this.currentView = type
-                    this.loading(false)
                 } else {
                     this.currentView = type
                     this.loading(false)
@@ -304,11 +308,21 @@ if (document.querySelector('#group')) {
                     this.loading(false)
                 })
             },
-            submitCreate: function() {
-                console.log('submit create')
+            submitCreate: function(year, month, groupList) {
+                createGroup(year, month, {
+                    groupList: groupList
+                })
+                .then(response => {
+                    console.log(response)
+                    this.changeView(this.viewType.list)
+                })
             },
-            submitDelete: function() {
-                console.log('submit delete')
+            submitDelete: function(year, month) {
+                destroyGroup(year, month)
+                .then(response => {
+                    console.log(response)
+                    this.changeView(this.viewType.list)
+                })
             },
             loading: function(bool) {
                 this.isLoading = bool

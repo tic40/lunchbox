@@ -73,7 +73,7 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $update = DepartmentRepository::updateDepartment($request, $id) === true ? 1 : 0;
         return response()->json([
