@@ -102,7 +102,7 @@ if (document.querySelector(appIds.employee)) {
                 this.isLoading = bool
             }
         }
-   });
+    })
 }
 
 /**
@@ -159,7 +159,7 @@ if (document.querySelector(appIds.department)) {
                 this.isLoading = bool
             }
         }
-   });
+    })
 }
 
 
@@ -217,7 +217,7 @@ if (document.querySelector(appIds.position)) {
                 this.isLoading = bool
             }
         }
-   });
+    })
 }
 
 /**
@@ -270,7 +270,7 @@ if (document.querySelector(appIds.group)) {
         },
         methods: {
             getGroupList: function() {
-                if (this.yearMonth == '' || this.yearMonth == undefined) {
+                if (this.yearMonth == "" || this.yearMonth == undefined) {
                     this.groupList = []
                 } else {
                     this.loading(true)
@@ -296,8 +296,8 @@ if (document.querySelector(appIds.group)) {
                     this.loading(false)
                 }
             },
-            clickCreate: function(year, month) {
-                this.generatedGroupList = [];
+            clickCreate: function() {
+                this.generatedGroupList = []
                 this.changeView(this.viewType.create)
             },
             clickDelete: function() {
@@ -317,14 +317,12 @@ if (document.querySelector(appIds.group)) {
                     groupList: groupList
                 })
                 .then(response => {
-                    console.log(response)
                     this.changeView(this.viewType.list)
                 })
             },
             submitDelete: function(year, month) {
                 destroyGroup(year, month)
                 .then(response => {
-                    console.log(response)
                     this.changeView(this.viewType.list)
                 })
             },

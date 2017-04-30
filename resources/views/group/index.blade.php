@@ -12,7 +12,7 @@
                     </div>
 
                     <div v-else-if="groupList.length == 0 && yearMonth">
-                        <button type="button" class="btn btn-success pull-right" @click="clickCreate(getYear, getMonth)">create</button>
+                        <button type="button" class="btn btn-success pull-right" @click="clickCreate(getYear, getMonth)">new group</button>
                     </div>
                 </div>
 

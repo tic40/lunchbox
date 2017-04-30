@@ -11507,7 +11507,7 @@ if (document.querySelector(appIds.group)) {
             getGroupList: function getGroupList() {
                 var _this8 = this;
 
-                if (this.yearMonth == '' || this.yearMonth == undefined) {
+                if (this.yearMonth == "" || this.yearMonth == undefined) {
                     this.groupList = [];
                 } else {
                     this.loading(true);
@@ -11529,7 +11529,7 @@ if (document.querySelector(appIds.group)) {
                     this.loading(false);
                 }
             },
-            clickCreate: function clickCreate(year, month) {
+            clickCreate: function clickCreate() {
                 this.generatedGroupList = [];
                 this.changeView(this.viewType.create);
             },
@@ -11552,7 +11552,6 @@ if (document.querySelector(appIds.group)) {
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["g" /* createGroup */])(year, month, {
                     groupList: groupList
                 }).then(function (response) {
-                    console.log(response);
                     _this10.changeView(_this10.viewType.list);
                 });
             },
@@ -11560,7 +11559,6 @@ if (document.querySelector(appIds.group)) {
                 var _this11 = this;
 
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["h" /* destroyGroup */])(year, month).then(function (response) {
-                    console.log(response);
                     _this11.changeView(_this11.viewType.list);
                 });
             },
