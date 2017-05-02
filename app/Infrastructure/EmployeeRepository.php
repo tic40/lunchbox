@@ -13,12 +13,14 @@ class EmployeeRepository
         return $employeeEntities;
     }
 
-    public static function getEmployee(int $id) {
+    public static function getEmployee(int $id)
+    {
         $employee = \App\employees::find($id);
         return static::setEmployeeEntity($employee);
     }
 
-    public static function storeEmployee($request) {
+    public static function storeEmployee($request)
+    {
         $employee = new \App\employees;
         $employee->name = $request['name'];
         $employee->department_id = $request['department_id'];
@@ -26,7 +28,8 @@ class EmployeeRepository
         return $employee->save();
     }
 
-    public static function updateEmployee($request, int $id) {
+    public static function updateEmployee($request, int $id)
+    {
         $employee = \App\employees::find($id);
         $employee->name = $request['name'];
         $employee->department_id = $request['department_id'];
@@ -34,7 +37,8 @@ class EmployeeRepository
         return $employee->save();
     }
 
-    public static function deleteEmployee(int $id) {
+    public static function deleteEmployee(int $id)
+    {
         $employee = \App\employees::find($id);
         return $employee->delete();
     }

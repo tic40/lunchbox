@@ -14,24 +14,28 @@ class PositionRepository
         return $positionEntities;
     }
 
-    public static function getPosition(int $id) {
+    public static function getPosition(int $id)
+    {
         $position = \App\positions::find($id);
         return static::setPositionEntity($position);
     }
 
-    public static function storePosition($request) {
+    public static function storePosition($request)
+    {
         $position = new \App\positions;
         $position->name = $request['name'];
         return $position->save();
     }
 
-    public static function updatePosition($request, int $id) {
+    public static function updatePosition($request, int $id)
+    {
         $position = \App\positions::find($id);
         $position->name = $request['name'];
         return $position->save();
     }
 
-    public static function deletePosition(int $id) {
+    public static function deletePosition(int $id)
+    {
         $position = \App\positions::find($id);
         return $position->delete();
     }

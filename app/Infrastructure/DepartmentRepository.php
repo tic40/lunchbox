@@ -13,24 +13,28 @@ class DepartmentRepository
         return $departmentEntities;
     }
 
-    public static function getDepartment(int $id) {
+    public static function getDepartment(int $id)
+    {
         $department = \App\departments::find($id);
         return static::setDepartmentEntity($department);
     }
 
-    public static function storeDepartment($request) {
+    public static function storeDepartment($request)
+    {
         $department = new \App\departments;
         $department->name = $request['name'];
         return $department->save();
     }
 
-    public static function updateDepartment($request, int $id) {
+    public static function updateDepartment($request, int $id)
+    {
         $department = \App\departments::find($id);
         $department->name = $request['name'];
         return $department->save();
     }
 
-    public static function deleteDepartment(int $id) {
+    public static function deleteDepartment(int $id)
+    {
         $department = \App\departments::find($id);
         return $department->delete();
     }

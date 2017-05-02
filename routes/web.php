@@ -20,7 +20,7 @@ Route::get('/employee', 'EmployeeController@index');
 Route::get('/department', 'DepartmentController@index');
 Route::get('/position', 'PositionController@index');
 
-Route::get('/api/auth', function() {
+Route::get('/api/auth', function () {
     return response()->json([
         'isLogin' => Auth::check() ? 1 : 0
     ]);

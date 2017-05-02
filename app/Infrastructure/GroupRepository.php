@@ -25,12 +25,18 @@ class GroupRepository
         return $groupEntities;
     }
 
-    public static function getGroup(int $id) {
+    public static function getGroupsByTargetDateRange()
+    {
+    }
+
+    public static function getGroup(int $id)
+    {
         $group = \App\groups::find($id);
         return static::setGroupEntity($group);
     }
 
-    public static function storeGroups(int $year, int $month, array $groupList) {
+    public static function storeGroups(int $year, int $month, array $groupList)
+    {
         $targetDate = \Carbon\Carbon::create($year, $month, 1);
         $insertion = [];
         foreach ($groupList as $v) {
@@ -44,7 +50,8 @@ class GroupRepository
         return \App\groups::insert($insertion);
     }
 
-    public static function deleteGroupsByTargetDate(int $year, int $month) {
+    public static function deleteGroupsByTargetDate(int $year, int $month)
+    {
         $targetDate = \Carbon\Carbon::create($year, $month, 1);
         return \App\groups::where('target_date', $targetDate->format('Y-m-d'))
             ->delete();
@@ -57,7 +64,7 @@ class GroupRepository
         $groupEntity->name = $group->name;
         $groupEntity->targetDate = $group->target_date;
         $groupEntity->groupMembers = [];
-        foreach($group->employees as $key => $employee) {
+        foreach ($group->employees as $key => $employee) {
             $member = [];
             $member['name'] = $employee['name'];
             $member['departmentName'] = $employee->departments['name'];
