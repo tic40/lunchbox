@@ -9,11 +9,11 @@
                     </div>
                     <div class="modal-footer">
                         <slot name="footer">
-                            <button class="btn btn-default" @click="cancel()">
-                                Cancel
-                            </button>
                             <button class="btn btn-primary" @click="submit()">
                                 OK
+                            </button>
+                            <button class="btn btn-default" @click="cancel()">
+                                Cancel
                             </button>
                         </slot>
                     </div>
