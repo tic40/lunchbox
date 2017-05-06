@@ -14,7 +14,7 @@ class EmployeesTableSeeder extends Seeder
     {
         $faker = Faker\Factory::create();
 
-        for ($i = 1; $i <= 50; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
             DB::table('employees')->insert([
                 'name' => $faker->firstNameMale,
                 'department_id' => $faker->numberBetween($min = 1, $max = 15),
