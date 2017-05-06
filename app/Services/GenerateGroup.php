@@ -8,113 +8,173 @@ use \App\Infrastructure\GroupRepository;
 
 class GenerateGroup
 {
-    public function execute(int $groupNumber)
+    // matching score weight
+    const SCORES = [
+        'samePosition' => 1,
+        'sameDepartment' => 2,
+        'alreadyMatched' => 3,
+    ];
+    const REFERENCE_MONTH_RANGE = 12;
+
+    // employee entities
+    protected $employees;
+    protected $groupNumber;
+
+    public function __construct(array $employees)
     {
-        $employeeEntities = EmployeeRepository::getEmployees();
-        if (count($employeeEntities) < $groupNumber) {
-            $groupNumber = count($employeeEntities);
-        }
         $ary = [];
-        foreach ($employeeEntities as $employee) {
+        foreach ($employees as $employee) {
             $ary[$employee->id] = $employee;
         }
-        $employeeEntities = $ary;
+        $this->employees = $ary;
+    }
 
-        foreach ($employeeEntities as $key => $employee) {
-            $matchingScore = [];
-            foreach ($employeeEntities as $target) {
-                $weight = 0;
-                // same position
-                if ($target->positionId == $employee->positionId) {
-                    $weight += 1;
-                }
-                // same department
-                if ($target->departmentId == $employee->departmentId) {
-                    $weight += 2;
-                }
-                $matching[$target->id] = $weight;
-            }
-            $employeeEntities[$key]->matching = $matching;
+    public function execute(int $groupNumber, int $year, int $month)
+    {
+        $this->setGroupNumber($groupNumber);
+        $this->setTargetDate($year, $month);
+        $groupList = $this->createGroupList();
+
+        foreach ($groupList as $key => $group) {
+            $groupList[$key] = ['groupMembers' => $group];
+            $groupList[$key]['name'] = $this->generateGroupName($key);
         }
 
-        $matching = GroupRepository::getGroupsMatchingByTargetDateRange(6);
-        foreach ($matching as $pair) {
-            // already matched within 6 month
-            $employeeEntities[$pair->id]->matching[$pair->pair_id] += 2;
+        arsort($groupList);
+        $sorted = [];
+        foreach ($groupList as $group) {
+            $sorted[] = $group;
         }
+        return $sorted;
+    }
 
-        shuffle($employeeEntities);
-        $i = 0;
-        $groupList = [];
-        $employees = $employeeEntities;
-/*
-        while ($i < count($employees)) {
-            if ($groupNumber <= $i) {
-                $i = 0;
-            }
-            if (isset($groupList[$i]) === false) {
-                $groupList[$i] = [];
-            }
-
-            if (count($groupList[$i]) > 0) {
-                foreach($employees as $candidate) {
-                    $totalWeight = 0;
-                    foreach ($groupList[$i] as $groupMember) {
-                        $totalWeight += $groupMember->matching[$candidate->id];
-                    }
-                }
-                $member = $candidate;
-            } else { $member = reset($employees); }
-            array_push($groupList[$i], $member);
-
-            unset($employees[$member->id]);
-            $i++;
-        }
-*/
-
-        foreach ($employeeEntities as $employee) {
-            if ($groupNumber <= $i) {
-                $i = 0;
-            }
-            if (isset($groupList[$i]) === false) {
-                $groupList[$i] = [];
-            }
-            if (count($groupList[$i]) > 0) {
-
-            }
-
-            array_push($groupList[$i], $employee);
-            $i++;
-        }
-
-        $returnList = [];
-        foreach ($groupList as $groupListKey => $group) {
-            foreach ($group as $groupKey => $member) {
-                // create group name by alphabet pattern
-                $groupName = (0 < intval($groupListKey/26))
-                    ? chr(65+intval($groupListKey/26)) . chr(65+($groupListKey%26))
-                    : chr(65+($groupListKey%26));
-
-                $returnList[$groupListKey]['name'] = $groupName;
-                $member->isLeader = ($groupKey == 0) ? 1 : 0;
-                $returnList[$groupListKey]['groupMembers'][] = $member;
-            }
-        }
-        return $returnList;
+    public function generateGroupName(int $num)
+    {
+        // alphabet: ex: A, B, C...Z, AA, AB..
+        return (0 < intval($num/26))
+            ? chr(65 + intval($num / 26)) . chr(65 + ($num % 26))
+            : chr(65 + ($num % 26));
     }
 
     public function isSameDepartment(Employee $emp1, Employee $emp2)
     {
-        return $emp1->getDepartmentId() === $emp2->getDepartmentId();
-    }
-
-    public function isSameTeam(Employee $emp1, Employee $emp2)
-    {
-        return $emp1->getTeamId() === $emp2->getTeamId();
+        return $emp1->departmentId === $emp2->departmentId;
     }
 
     public function isSamePosition(Employee $emp1, Employee $emp2)
     {
-        return $emp1->getTeamId() === $emp2->getTeamId();
+        return $emp1->positionId === $emp2->positionId;
+    }
+
+    public function setGroupNumber(int $groupNumber)
+    {
+        $this->groupNumber = (count($this->employees) < $groupNumber)
+            ? count($this->employees)
+            : $groupNumber;
+    }
+
+    public function setTargetDate(int $year, int $month)
+    {
+        $this->targetDate = \Carbon\Carbon::create($year, $month, 1);
+    }
+
+    public function calcMatchingScore()
+    {
+        foreach ($this->employees as $key => $employee) {
+            $scores = [];
+            foreach ($this->employees as $target) {
+                $score = 0;
+                if ($this->isSamePosition($employee, $target)) {
+                    $score += self::SCORES['samePosition'];
+                }
+                if ($this->isSameDepartment($employee, $target)) {
+                    $score += self::SCORES['sameDepartment'];
+                }
+                $scores[$target->id] = $score;
+            }
+            $this->employees[$key]->matchingScore = $scores;
+        }
+        $matchingData = GroupRepository::getMatchingDataByMonthRange($this->targetDate, self::REFERENCE_MONTH_RANGE);
+        foreach ($matchingData as $v) {
+            $this->employees[$v->id]->matchingScore[$v->pair_id] += self::SCORES['alreadyMatched'];
+        }
+    }
+
+    public function calcNumberOfLeader()
+    {
+        foreach ($this->employees as $v) {
+            $v->numberOfLeader = 0;
+        }
+        $numberOfLeader = groupRepository::getNumberOfLeaderByMonthRange($this->targetDate, self::REFERENCE_MONTH_RANGE);
+        foreach ($numberOfLeader as $v) {
+            $this->employees[$v->id]->numberOfLeader = $v->total;
+        }
+    }
+
+    public function createGroupList()
+    {
+        $this->calcMatchingScore();
+        $this->calcNumberOfLeader();
+        shuffle($this->employees);
+
+        $groupList = [];
+        $i = 0;
+        $num = 1;
+        foreach ($this->employees as $employee) {
+            if ($this->groupNumber <= $i) {
+                $i = 0;
+                $num++;
+            }
+
+            if ($num === 1) {
+                $groupList[$i] = [];
+                $listKey = $i;
+            } else {
+                $min = null;
+                foreach ($groupList as $k1 => $group) {
+                    if ($num <= count($group)) {
+                        continue;
+                    }
+                    $totalScore = 0;
+                    foreach ($group as $k2 => $member) {
+                        $totalScore += $member->matchingScore[$employee->id];
+                    }
+                    if ($min === null || $totalScore < $min) {
+                        $listKey = $k1;
+                        $min = $totalScore;
+                        if ($min === 0) { break; }
+                    }
+                }
+            }
+            $groupList[$listKey][] = $employee;
+            $i++;
+        }
+
+        $groupList = $this->decideGroupLeader($groupList);
+        return $groupList;
+    }
+
+    public function decideGroupLeader(array $groupList)
+    {
+        foreach ($groupList as $groupListKey => $group) {
+            $min = null;
+            $leaderKey = 0;
+            $members = [];
+            foreach ($group as $groupKey => $member) {
+                $member->isLeader = 0;
+                if ($min === null || $member->numberOfLeader < $min) {
+                    $min = $member->numberOfLeader;
+                    $leaderKey = $groupKey;
+                    if ($min === 0) {
+                        break;
+                    }
+                }
+            }
+            $groupList[$groupListKey][$leaderKey]->isLeader = 1;
+            if ($leaderKey !== 0) {
+                list ($groupList[$groupListKey][0], $groupList[$groupListKey][$leaderKey]) = [ $groupList[$groupListKey][$leaderKey], $groupList[$groupListKey][0] ];
+            }
+        }
+        return $groupList;
     }
 }

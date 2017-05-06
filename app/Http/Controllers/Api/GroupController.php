@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\GenerateGroup;
 use App\Infrastructure\GroupRepository;
+use App\Infrastructure\EmployeeRepository;
 use App\Infrastructure\GroupMemberRepository;
 
 class GroupController extends Controller
@@ -29,9 +30,9 @@ class GroupController extends Controller
      */
     public function create(int $year, int $month, int $groupNumber)
     {
-        $generateGroup = new GenerateGroup;
+        $generateGroup = new GenerateGroup(EmployeeRepository::getEmployees());
         return response()->json(
-            $generateGroup->execute($groupNumber)
+            $generateGroup->execute($groupNumber, $year, $month)
         );
     }
 
