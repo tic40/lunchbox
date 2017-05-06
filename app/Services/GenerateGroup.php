@@ -142,7 +142,9 @@ class GenerateGroup
                     if ($min === null || $totalScore < $min) {
                         $listKey = $k1;
                         $min = $totalScore;
-                        if ($min === 0) { break; }
+                        if ($min === 0) {
+                            break;
+                        }
                     }
                 }
             }
@@ -172,7 +174,7 @@ class GenerateGroup
             }
             $groupList[$groupListKey][$leaderKey]->isLeader = 1;
             if ($leaderKey !== 0) {
-                list ($groupList[$groupListKey][0], $groupList[$groupListKey][$leaderKey]) = [ $groupList[$groupListKey][$leaderKey], $groupList[$groupListKey][0] ];
+                list($groupList[$groupListKey][0], $groupList[$groupListKey][$leaderKey]) = [ $groupList[$groupListKey][$leaderKey], $groupList[$groupListKey][0] ];
             }
         }
         return $groupList;

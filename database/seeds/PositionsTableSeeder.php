@@ -13,7 +13,7 @@ class PositionsTableSeeder extends Seeder
     {
         $faker = Faker\Factory::create();
 
-        for($i = 1; $i <= 6; $i++) {
+        for ($i = 1; $i <= 6; $i++) {
             DB::table('positions')->insert([
                 'name' => "G{$i}",
             ]);

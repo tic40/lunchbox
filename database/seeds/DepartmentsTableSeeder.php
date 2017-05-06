@@ -13,7 +13,7 @@ class DepartmentsTableSeeder extends Seeder
     {
         $faker = Faker\Factory::create();
 
-        for($i = 1; $i <= 15; $i++) {
+        for ($i = 1; $i <= 15; $i++) {
             DB::table('departments')->insert([
                 'name' => $faker->unique()->colorName,
                 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
