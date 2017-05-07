@@ -189,6 +189,6 @@ class GenerateGroup
 
     public function setTargetDate(int $year, int $month)
     {
-        $this->targetDate = \Carbon\Carbon::create($year, $month, 1);
+        $this->targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
     }
 }
