@@ -82,7 +82,7 @@ class GroupRepository
 
     public static function storeGroups(int $year, int $month, array $groupList)
     {
-        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+        $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
         $insertion = [];
         foreach ($groupList as $v) {
             $insertion[] = [
@@ -97,7 +97,7 @@ class GroupRepository
 
     public static function deleteGroupsByTargetDate(int $year, int $month)
     {
-        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+        $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
         return \App\groups::where('target_date', $targetDate->format('Y-m-d'))
             ->delete();
     }
@@ -110,12 +110,13 @@ class GroupRepository
         $groupEntity->targetDate = $group->target_date;
         $groupEntity->groupMembers = [];
         foreach ($group->employees as $key => $employee) {
-            $member = [];
-            $member['name'] = $employee['name'];
-            $member['departmentName'] = $employee->departments['name'];
-            $member['positionName'] = $employee->positions['name'];
-            $member['isLeader'] = $employee->group_members['is_leader'];
-            $groupEntity->groupMembers[] = $member;
+            $groupEntity->groupMembers[] = [
+                'id' => $employee['id'],
+                'name' => $employee['name'],
+                'departmentName' => $employee->departments['name'],
+                'positionName' => $employee->positions['name'],
+                'isLeader' => $group->group_members[$key]['is_leader'],
+            ];
         }
         return $groupEntity;
     }

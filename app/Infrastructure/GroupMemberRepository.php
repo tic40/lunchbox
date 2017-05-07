@@ -45,7 +45,7 @@ class GroupMemberRepository
 
     public static function deleteGroupMembersByTargetDate(int $year, int $month)
     {
-        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+        $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
         return \App\group_members::join('groups', 'group_members.group_id', '=', 'groups.id')
             ->where('groups.target_date', $targetDate->format('Y-m-d'))
             ->delete();
