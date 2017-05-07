@@ -36,7 +36,7 @@ function destroy(url) {
 }
 
 export function checkAuth() {
-    return fetch('api/auth')
+    return fetch('api/user')
 }
 export function getEmployees() {
     return fetch('api/employee/list')
@@ -89,4 +89,3 @@ export function createGroup(year, month, request) {
 export function destroyGroup(year, month) {
     return destroy('api/group/' + year + '/' + month)
 }
-

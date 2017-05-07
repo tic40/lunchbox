@@ -6,6 +6,8 @@ class Department
     public $id;
     public $name;
     public $deletedAt;
+    public $createdAt;
+    public $updatedAt;
 
     public function getId()
     {

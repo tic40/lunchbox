@@ -42,6 +42,22 @@ const appIds = {
     group: '#app-group'
 }
 
+function handleApiError(e) {
+    console.log(e)
+    const status = e.response.status
+    console.log(status)
+
+    if (status == 401 || status == 500) {
+        const c = confirm("Your session has expired. you need re-login. Click 'OK' if you want to move to the login page.");
+        if (c === true) {
+            location.href = '/login'
+        }
+    }
+    else {
+        alert('unexpected error occurred: ' + e)
+    }
+}
+
 /**
  * employee
  */
@@ -79,6 +95,7 @@ if (document.querySelector(appIds.employee)) {
                 this.positions = responses[3]
                 this.loading(false)
             })
+            .catch(e => { handleApiError(e) })
         },
         methods: {
             setSelectedEmployee: function(index) {
@@ -93,6 +110,7 @@ if (document.querySelector(appIds.employee)) {
                         this.currentView = type
                         this.loading(false)
                     })
+                    .catch(e => { handleApiError(e) })
                 } else {
                     this.currentView = type
                     this.loading(false)
@@ -136,6 +154,7 @@ if (document.querySelector(appIds.department)) {
                 this.departments = responses[1]
                 this.loading(false)
             })
+            .catch(e => { handleApiError(e) })
         },
         methods: {
             setSelectedDepartment: function(index) {
@@ -150,6 +169,7 @@ if (document.querySelector(appIds.department)) {
                         this.currentView = type
                         this.loading(false)
                     })
+                    .catch(e => { handleApiError(e) })
                 } else {
                     this.currentView = type
                     this.loading(false)
@@ -194,6 +214,7 @@ if (document.querySelector(appIds.position)) {
                 this.positions = responses[1]
                 this.loading(false)
             })
+            .catch(e => { handleApiError(e) })
         },
         methods: {
             setSelectedPosition: function(index) {
@@ -208,6 +229,7 @@ if (document.querySelector(appIds.position)) {
                         this.currentView = type
                         this.loading(false)
                     })
+                    .catch(e => { handleApiError(e) })
                 } else {
                     this.currentView = type
                     this.loading(false)
@@ -236,6 +258,7 @@ if (document.querySelector(appIds.group)) {
             yearMonth: '0000-00',
             groupNumber: null,
             showCreateConfirmModal: false,
+            showCreateCancelConfirmModal: false,
             isLoading: false
         },
         components: {
@@ -254,6 +277,7 @@ if (document.querySelector(appIds.group)) {
                 this.groupList = responses[1]
                 this.loading(false)
             })
+            .catch(e => { handleApiError(e) })
         },
         computed: {
             getYear: function() {
@@ -279,6 +303,7 @@ if (document.querySelector(appIds.group)) {
                         this.groupList = response
                         this.loading(false)
                     })
+                    .catch(e => { handleApiError(e) })
                 }
             },
             getCurrentYearMonth: function() {
@@ -310,21 +335,32 @@ if (document.querySelector(appIds.group)) {
                     this.generatedGroupList = response
                     this.loading(false)
                 })
+                .catch(e => { handleApiError(e) })
             },
             submitCreate: function(year, month, groupList) {
-                this.showCreateConfirmModal = false
+                this.loading(true)
                 createGroup(year, month, {
                     groupList: groupList
                 })
                 .then(response => {
                     this.changeView(this.viewType.list)
                 })
+                .catch(e => { handleApiError(e) })
             },
             submitDelete: function(year, month) {
+                this.loading(true)
                 destroyGroup(year, month)
                 .then(response => {
                     this.changeView(this.viewType.list)
                 })
+                .catch(e => { handleApiError(e) })
+            },
+            clickCreateCancel: function() {
+                if (this.generatedGroupList.length <= 0) {
+                    this.changeView(this.viewType.list)
+                } else {
+                    this.showCreateCancelConfirmModal = true
+                }
             },
             loading: function(bool) {
                 this.isLoading = bool

@@ -485,7 +485,7 @@ function destroy(url) {
 }
 
 function checkAuth() {
-    return fetch('api/auth');
+    return fetch('api/user');
 }
 function getEmployees() {
     return fetch('api/employee/list');
@@ -11452,6 +11452,21 @@ var appIds = {
     group: '#app-group'
 };
 
+function handleApiError(e) {
+    console.log(e);
+    var status = e.response.status;
+    console.log(status);
+
+    if (status == 401 || status == 500) {
+        var c = confirm("Your session has expired. you need re-login. Click 'OK' if you want to move to the login page.");
+        if (c === true) {
+            location.href = '/login';
+        }
+    } else {
+        alert('unexpected error occurred: ' + e);
+    }
+}
+
 /**
  * employee
  */
@@ -11484,6 +11499,8 @@ if (document.querySelector(appIds.employee)) {
                 _this.departments = responses[2];
                 _this.positions = responses[3];
                 _this.loading(false);
+            }).catch(function (e) {
+                handleApiError(e);
             });
         },
         methods: {
@@ -11499,6 +11516,8 @@ if (document.querySelector(appIds.employee)) {
                         _this2.employees = response;
                         _this2.currentView = type;
                         _this2.loading(false);
+                    }).catch(function (e) {
+                        handleApiError(e);
                     });
                 } else {
                     this.currentView = type;
@@ -11540,6 +11559,8 @@ if (document.querySelector(appIds.department)) {
                 _this3.isLogin = responses[0].isLogin;
                 _this3.departments = responses[1];
                 _this3.loading(false);
+            }).catch(function (e) {
+                handleApiError(e);
             });
         },
         methods: {
@@ -11555,6 +11576,8 @@ if (document.querySelector(appIds.department)) {
                         _this4.departments = response;
                         _this4.currentView = type;
                         _this4.loading(false);
+                    }).catch(function (e) {
+                        handleApiError(e);
                     });
                 } else {
                     this.currentView = type;
@@ -11596,6 +11619,8 @@ if (document.querySelector(appIds.position)) {
                 _this5.isLogin = responses[0].isLogin;
                 _this5.positions = responses[1];
                 _this5.loading(false);
+            }).catch(function (e) {
+                handleApiError(e);
             });
         },
         methods: {
@@ -11611,6 +11636,8 @@ if (document.querySelector(appIds.position)) {
                         _this6.positions = response;
                         _this6.currentView = type;
                         _this6.loading(false);
+                    }).catch(function (e) {
+                        handleApiError(e);
                     });
                 } else {
                     this.currentView = type;
@@ -11640,6 +11667,7 @@ if (document.querySelector(appIds.group)) {
             yearMonth: '0000-00',
             groupNumber: null,
             showCreateConfirmModal: false,
+            showCreateCancelConfirmModal: false,
             isLoading: false
         },
         components: {
@@ -11655,6 +11683,8 @@ if (document.querySelector(appIds.group)) {
                 _this7.isLogin = responses[0].isLogin;
                 _this7.groupList = responses[1];
                 _this7.loading(false);
+            }).catch(function (e) {
+                handleApiError(e);
             });
         },
         computed: {
@@ -11681,6 +11711,8 @@ if (document.querySelector(appIds.group)) {
                     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["e" /* getGroupList */])(this.getYear, this.getMonth).then(function (response) {
                         _this8.groupList = response;
                         _this8.loading(false);
+                    }).catch(function (e) {
+                        handleApiError(e);
                     });
                 }
             },
@@ -11710,24 +11742,38 @@ if (document.querySelector(appIds.group)) {
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["f" /* getGenerateGroup */])(year, month, groupNumber).then(function (response) {
                     _this9.generatedGroupList = response;
                     _this9.loading(false);
+                }).catch(function (e) {
+                    handleApiError(e);
                 });
             },
             submitCreate: function submitCreate(year, month, groupList) {
                 var _this10 = this;
 
-                this.showCreateConfirmModal = false;
+                this.loading(true);
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["g" /* createGroup */])(year, month, {
                     groupList: groupList
                 }).then(function (response) {
                     _this10.changeView(_this10.viewType.list);
+                }).catch(function (e) {
+                    handleApiError(e);
                 });
             },
             submitDelete: function submitDelete(year, month) {
                 var _this11 = this;
 
+                this.loading(true);
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["h" /* destroyGroup */])(year, month).then(function (response) {
                     _this11.changeView(_this11.viewType.list);
+                }).catch(function (e) {
+                    handleApiError(e);
                 });
+            },
+            clickCreateCancel: function clickCreateCancel() {
+                if (this.generatedGroupList.length <= 0) {
+                    this.changeView(this.viewType.list);
+                } else {
+                    this.showCreateCancelConfirmModal = true;
+                }
             },
             loading: function loading(bool) {
                 this.isLoading = bool;
@@ -33598,7 +33644,10 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [(_vm.groupList.length > 0) ? _c('div', [_c('button', {
-    staticClass: "btn btn-link btn-sm",
+    staticClass: "btn btn-default btn-sm",
+    class: [{
+      'btn-success': _vm.openSearch
+    }],
     attrs: {
       "type": "button"
     },
@@ -33608,11 +33657,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('i', {
-    staticClass: "fa fa-plus",
+    staticClass: "fa fa-search",
     attrs: {
       "aria-hidden": "true"
     }
-  }), _vm._v(" SEARCH")]), _vm._v(" "), (_vm.openSearch) ? _c('div', [_c('input', {
+  })]), _vm._v(" "), (_vm.openSearch) ? _c('span', [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",

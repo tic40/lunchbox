@@ -45,6 +45,10 @@ class PositionRepository
         $positionEntity = new \App\Entity\Position();
         $positionEntity->id = $position->id;
         $positionEntity->name = $position->name;
+        $positionEntity->deletedAt = $position->deleted_at;
+        $positionEntity->createdAt = $position->created_at;
+        $positionEntity->updatedAt = $position->updated_at;
+
         return $positionEntity;
     }
 }

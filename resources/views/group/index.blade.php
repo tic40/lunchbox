@@ -33,9 +33,16 @@
             <div v-else-if="currentView === viewType.create">
                 <modal
                     v-if="showCreateConfirmModal"
-                    @submit="submitCreate(getYear, getMonth, generatedGroupList)"
+                    @submit="submitCreate(getYear, getMonth, generatedGroupList); showCreateConfirmModal = false"
                     @close="showCreateConfirmModal = false">
                     <p slot="header">Are you sure to submit the group for @{{yearMonth}}?</p>
+                </modal>
+
+                <modal
+                    v-if="showCreateCancelConfirmModal"
+                    @submit="changeView(viewType.list); showCreateCancelConfirmModal = false"
+                    @close="showCreateCancelConfirmModal = false">
+                    <p slot="header">You have not submitted the generated group yet. Are you sure to back to the group list page?</p>
                 </modal>
 
                 <h3>Create Group List For <strong>@{{yearMonth}}</strong></h3>
@@ -48,7 +55,7 @@
                     <button v-if="generatedGroupList.length > 0" type="button" class="btn btn-default btn-primary" @click="showCreateConfirmModal = true" :disabled="isLoading">
                         Submit
                     </button>
-                    <button type="button" class="btn btn-default" @click="changeView(viewType.list)" :disabled="isLoading">
+                    <button type="button" class="btn btn-default" @click="clickCreateCancel()" :disabled="isLoading">
                         Cancel
                     </button>
                 </div>
@@ -64,7 +71,7 @@
                 <h3>Delete Group List For @{{yearMonth}}</h3>
                 <section>
                     <div style="margin-top: 2em">
-                        <p class="text-danger"><strong>Are you sure to delete?</strong></p>
+                        <p class="text-danger"><strong>Are you sure to delete the group?</strong></p>
                         <button class="btn btn-default btn-danger" @click="submitDelete(getYear, getMonth)" :disabled="isLoading">
                             Delete
                         </button>

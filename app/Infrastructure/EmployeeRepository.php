@@ -52,6 +52,9 @@ class EmployeeRepository
         $employeeEntity->departmentName = $employee->departments->name;
         $employeeEntity->positionId = $employee->position_id;
         $employeeEntity->positionName = $employee->positions->name;
+        $employeeEntity->deletedAt = $employee->deleted_at;
+        $employeeEntity->createdAt = $employee->created_at;
+        $employeeEntity->updatedAt = $employee->updated_at;
 
         return $employeeEntity;
     }

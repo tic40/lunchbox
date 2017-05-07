@@ -44,6 +44,10 @@ class DepartmentRepository
         $departmentEntity = new \App\Entity\Department();
         $departmentEntity->id = $department->id;
         $departmentEntity->name = $department->name;
+        $departmentEntity->deletedAt = $department->deleted_at;
+        $departmentEntity->createdAt = $department->created_at;
+        $departmentEntity->updatedAt = $department->updated_at;
+
         return $departmentEntity;
     }
 }
