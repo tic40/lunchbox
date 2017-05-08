@@ -15,7 +15,7 @@ class GroupRepository
 
     public static function getGroupsByTargetDate(int $year, int $month)
     {
-        $targetDate = \Carbon\Carbon::create($year, $month, 1);
+        $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
         $groups = \App\groups::where('target_date', $targetDate->format('Y-m-d'))
             ->get();
         $groupEntities = [];
