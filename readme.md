@@ -1,10 +1,14 @@
 # Lunchbox
 
-## Description
-create and manage shuffle lunch group.
+## Overview
+This APP encourages having lunch between employees in your office!
 
-* server side FW: Laravel v5.4
-* frontend FW: Vue.js v2.1
+## Features
+
+* CRUD employees
+* CRUD department
+* CRUD employee's position
+* Create lunch group by matching algorithm.
 
 ## Requirement
 * PHP >= 7.0
@@ -14,6 +18,9 @@ create and manage shuffle lunch group.
 * Mbstring PHP Extension
 * Tokenizer PHP Extension
 * XML PHP Extension
+* Framework
+    * server side FW: Laravel v5.4
+    * frontend FW: Vue.js v2.1
 
 ## Installation
 
@@ -53,15 +60,12 @@ run server
 $ php artisan serve
 ```
 
-
-refer to the Laravel 5.4 Installation.
-[Installation](https://laravel.com/docs/5.4/installation)
+refer to the [Laravel 5.4 Installation](https://laravel.com/docs/5.4/installation)
 
 
 ## Learning Laravel
-[Laravel documentation](https://laravel.com/docs)
-[Laracasts](https://laracasts.com)
+* [Laravel documentation](https://laravel.com/docs)
+* [Laracasts](https://laracasts.com)
 
 ## Learning Vue.js
-[Vue.js v2 Guide](https://vuejs.org/v2/guide/)
-
+* [Vue.js v2 Guide](https://vuejs.org/v2/guide/)
