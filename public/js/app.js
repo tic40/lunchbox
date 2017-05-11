@@ -11457,7 +11457,7 @@ function handleApiError(e) {
     var status = e.response.status;
     console.log(status);
 
-    if (status == 401 || status == 500) {
+    if (status == 401) {
         var c = confirm("Your session has expired. you need re-login. Click 'OK' if you want to move to the login page.");
         if (c === true) {
             location.href = '/login';
