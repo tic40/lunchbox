@@ -17,7 +17,7 @@ class CreateGroupMembersTable extends Migration
             $table->increments('id');
             $table->integer('group_id')->references('id')->on('groups');
             $table->integer('employee_id')->references('id')->on('employees');
-            $table->boolean('is_leader');
+            $table->boolean('is_coordinator');
             $table->timestamps();
         });
     }

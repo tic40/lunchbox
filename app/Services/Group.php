@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Entity\Employee;
 use App\Infrastructure\GroupRepository;
-use App\Infrastructure\EmployeeRepository;
 use App\Infrastructure\GroupMemberRepository;
 
 class Group
