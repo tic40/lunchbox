@@ -485,58 +485,58 @@ function destroy(url) {
 }
 
 function checkAuth() {
-    return fetch('api/user');
+    return fetch('/api/user');
 }
 function getEmployees() {
-    return fetch('api/employee/list');
+    return fetch('/api/employee/list');
 }
 function createEmployee(request) {
-    return post('api/employee', request);
+    return post('/api/employee', request);
 }
 function updateEmployee(id, request) {
-    return put('api/employee/' + id, request);
+    return put('/api/employee/' + id, request);
 }
 function destroyEmployee(id, request) {
-    return destroy('api/employee/' + id, request);
+    return destroy('/api/employee/' + id, request);
 }
 
 function getDepartments() {
-    return fetch('api/department/list');
+    return fetch('/api/department/list');
 }
 function createDepartment(request) {
-    return post('api/department', request);
+    return post('/api/department', request);
 }
 function updateDepartment(id, request) {
-    return put('api/department/' + id, request);
+    return put('/api/department/' + id, request);
 }
 function destroyDepartment(id, request) {
-    return destroy('api/department/' + id, request);
+    return destroy('/api/department/' + id, request);
 }
 
 function getPositions() {
-    return fetch('api/position/list');
+    return fetch('/api/position/list');
 }
 function createPosition(request) {
-    return post('api/position', request);
+    return post('/api/position', request);
 }
 function updatePosition(id, request) {
-    return put('api/position/' + id, request);
+    return put('/api/position/' + id, request);
 }
 function destroyPosition(id, request) {
-    return destroy('api/position/' + id, request);
+    return destroy('/api/position/' + id, request);
 }
 
 function getGroupList(year, month) {
-    return fetch('api/group/' + year + '/' + month + '/list');
+    return fetch('/api/group/' + year + '/' + month + '/list');
 }
 function getGenerateGroup(year, month, groupNumber) {
-    return fetch('api/group/' + year + '/' + month + '/create/' + groupNumber);
+    return fetch('/api/group/' + year + '/' + month + '/create/' + groupNumber);
 }
 function createGroup(year, month, request) {
-    return post('api/group/' + year + '/' + month, request);
+    return post('/api/group/' + year + '/' + month, request);
 }
 function destroyGroup(year, month) {
-    return destroy('api/group/' + year + '/' + month);
+    return destroy('/api/group/' + year + '/' + month);
 }
 
 /***/ }),
@@ -33750,7 +33750,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-container"
   }, [_c('div', {
     staticClass: "modal-header"
-  }, [_vm._v("\n                        EDIT\n                    ")]), _vm._v(" "), _c('form', {
+  }, [_vm._v("\n                        CHANGE\n                    ")]), _vm._v(" "), _c('form', {
     on: {
       "submit": function($event) {
         $event.preventDefault();
@@ -33789,7 +33789,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, _vm._l((_vm.getMemberListFromGroupList), function(member) {
     return _c('option', {
       attrs: {
-        "disabled": member.id == 'group'
+        "disabled": member.id === 'group' || member.id === _vm.replaceMember.from.id
       },
       domProps: {
         "value": member
