@@ -166,7 +166,7 @@ class GenerateGroup
     {
         // alphabet: ex: A, B, C...Z, AA, AB..
         return (0 < intval($num/26))
-            ? chr(65 + intval($num / 26)) . chr(65 + ($num % 26))
+            ? chr(65 + intval($num / 26) - 1) . chr(65 + ($num % 26))
             : chr(65 + ($num % 26));
     }
 
