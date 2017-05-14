@@ -26,6 +26,7 @@
                     v-if="!isLoading"
                     :group-list="groupList"
                     :year-month="yearMonth">
+                    can-edit="false">
                 </group-list>
             </div>
 
@@ -62,7 +63,8 @@
 
                 <group-list
                     :group-list="generatedGroupList"
-                    :year-month="yearMonth">
+                    :year-month="yearMonth"
+                    can-edit="true">
                 </group-list>
             </div>
 
@@ -83,7 +85,8 @@
                     <div style="margin-top:1em">
                         <group-list
                             :group-list="groupList"
-                            :year-month="yearMonth">
+                            :year-month="yearMonth"
+                            :can-edit="false">
                         </group-list>
                     </div>
                 </section>
