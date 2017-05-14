@@ -6,7 +6,7 @@
                 <div class="modal-wrapper">
                     <div class="modal-container">
                         <div class="modal-header">
-                            EDIT
+                            CHANGE
                         </div>
                         <form v-on:submit.prevent="submitEdit()">
                             <div class="modal-body text-center">
@@ -17,7 +17,7 @@
                                 </div>
 
                                 <select class="form-control" v-model="replaceMember.to" required>
-                                    <option v-for="member in getMemberListFromGroupList" :value="member" :disabled="member.id=='group'">
+                                    <option v-for="member in getMemberListFromGroupList" :value="member" :disabled="member.id === 'group' || member.id === replaceMember.from.id">
                                         <span v-if="member.id=='group'">
                                             _____GROUP: {{member.name}}_____
                                         </span>

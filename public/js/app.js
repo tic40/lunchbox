@@ -33750,7 +33750,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "modal-container"
   }, [_c('div', {
     staticClass: "modal-header"
-  }, [_vm._v("\n                        EDIT\n                    ")]), _vm._v(" "), _c('form', {
+  }, [_vm._v("\n                        CHANGE\n                    ")]), _vm._v(" "), _c('form', {
     on: {
       "submit": function($event) {
         $event.preventDefault();
@@ -33789,7 +33789,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, _vm._l((_vm.getMemberListFromGroupList), function(member) {
     return _c('option', {
       attrs: {
-        "disabled": member.id == 'group'
+        "disabled": member.id === 'group' || member.id === _vm.replaceMember.from.id
       },
       domProps: {
         "value": member
