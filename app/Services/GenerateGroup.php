@@ -24,8 +24,8 @@ class GenerateGroup
     protected $groupNumber;
     // @var array matching score for each member
     protected $matchingScores;
-    // @var array how many time each employee become leader.
-    protected $numberOfLeader;
+    // @var array how many time each employee become coordinator.
+    protected $numberOfCoordinator;
 
     public function __construct(array $employees)
     {
@@ -123,42 +123,42 @@ class GenerateGroup
             $i++;
         }
 
-        $groupList = $this->decideGroupLeader($groupList);
+        $groupList = $this->decideGroupCoordinator($groupList);
         return $groupList;
     }
 
-    public function decideGroupLeader(array $groupList)
+    public function decideGroupCoordinator(array $groupList)
     {
-        $this->calcNumberOfLeader();
+        $this->calcNumberOfCoordinator();
         foreach ($groupList as $groupListKey => $group) {
             $min = null;
-            $leaderKey = 0;
+            $CoordinatorKey = 0;
             $members = [];
             foreach ($group as $groupKey => $member) {
-                $groupList[$groupListKey][$groupKey]->isLeader = 0;
-                if ($min === null || $this->numberOfLeader[$member->id] < $min) {
-                    $min = $this->numberOfLeader[$member->id];
-                    $leaderKey = $groupKey;
+                $groupList[$groupListKey][$groupKey]->isCoordinator = 0;
+                if ($min === null || $this->numberOfCoordinator[$member->id] < $min) {
+                    $min = $this->numberOfCoordinator[$member->id];
+                    $CoordinatorKey = $groupKey;
                 }
             }
-            $groupList[$groupListKey][$leaderKey]->isLeader = 1;
-            if ($leaderKey !== 0) {
-                list ($groupList[$groupListKey][0], $groupList[$groupListKey][$leaderKey]) = [ $groupList[$groupListKey][$leaderKey], $groupList[$groupListKey][0] ];
+            $groupList[$groupListKey][$CoordinatorKey]->isCoordinator = 1;
+            if ($CoordinatorKey !== 0) {
+                list ($groupList[$groupListKey][0], $groupList[$groupListKey][$CoordinatorKey]) = [ $groupList[$groupListKey][$CoordinatorKey], $groupList[$groupListKey][0] ];
             }
         }
         return $groupList;
     }
 
-    public function calcNumberOfLeader()
+    public function calcNumberOfCoordinator()
     {
-        $this->numberOfLeader = [];
+        $this->numberOfCoordinator = [];
         foreach ($this->employees as $v) {
-            $this->numberOfLeader[$v->id] = 0;
+            $this->numberOfCoordinator[$v->id] = 0;
         }
 
-        $dataNumberOfLeader = groupRepository::getNumberOfLeaderByMonthRange($this->targetDate, self::REFERENCE_MONTH_RANGE);
-        foreach ($dataNumberOfLeader as $v) {
-            $this->numberOfLeader[$v->id] = intval($v->total);
+        $dataNumberOfCoordinator = groupRepository::getNumberOfCoordinatorByMonthRange($this->targetDate, self::REFERENCE_MONTH_RANGE);
+        foreach ($dataNumberOfCoordinator as $v) {
+            $this->numberOfCoordinator[$v->id] = intval($v->total);
         }
     }
 

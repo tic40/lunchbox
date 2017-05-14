@@ -35,7 +35,7 @@ class GroupRepository
             .'     e.name,'
             .'     e.department_id,'
             .'     e.position_id,'
-            .'     gm.is_leader,'
+            .'     gm.is_coordinator,'
             .'     pair.id as pair_id,'
             .'     pair.name as pair_name'
             .' from employees e'
@@ -54,13 +54,13 @@ class GroupRepository
         );
     }
 
-    public static function getNumberOfLeaderByMonthRange(\Carbon\Carbon $targetDate, int $monthRange)
+    public static function getNumberOfCoordinatorByMonthRange(\Carbon\Carbon $targetDate, int $monthRange)
     {
         $to = $targetDate;
         $from = $to->copy()->subMonth($monthRange);
         return \DB::select(
             'select'
-            .'  e.id, sum(gm.is_leader) as total'
+            .'  e.id, sum(gm.is_coordinator) as total'
             .'  from employees e'
             .'  join group_members gm on e.id = gm.employee_id'
             .'  join groups g on g.id = gm.group_id'
@@ -115,7 +115,7 @@ class GroupRepository
                 'name' => $employee['name'],
                 'departmentName' => $employee->departments['name'],
                 'positionName' => $employee->positions['name'],
-                'isLeader' => $group->group_members[$key]['is_leader'],
+                'isCoordinator' => $group->group_members[$key]['is_coordinator'],
             ];
         }
         return $groupEntity;

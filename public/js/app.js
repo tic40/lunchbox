@@ -11457,7 +11457,7 @@ function handleApiError(e) {
     var status = e.response.status;
     console.log(status);
 
-    if (status == 401 || status == 500) {
+    if (status == 401) {
         var c = confirm("Your session has expired. you need re-login. Click 'OK' if you want to move to the login page.");
         if (c === true) {
             location.href = '/login';
@@ -13263,6 +13263,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'group-list',
@@ -13274,11 +13322,58 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 departmentName: '',
                 positionName: ''
             },
-            openSearch: false
+            openSearch: false,
+            showEditModal: false,
+            replaceMember: {
+                'from': null,
+                'to': null
+            }
         };
     },
-    props: ['groupList', 'yearMonth'],
+    props: ['groupList', 'yearMonth', 'canEdit'],
+    computed: {
+        getMemberListFromGroupList: function getMemberListFromGroupList() {
+            var editList = [];
+            this.groupList.forEach(function (group, groupListKey) {
+                editList.push({
+                    'id': 'group',
+                    'name': group.name
+                });
+                group.groupMembers.forEach(function (member, groupKey) {
+                    var addMember = member;
+                    addMember.groupListKey = groupListKey;
+                    addMember.groupKey = groupKey;
+                    editList.push(addMember);
+                });
+            });
+            return editList;
+        }
+    },
     methods: {
+        clickEdit: function clickEdit(member, groupListKey, groupKey) {
+            if (!this.canEdit) {
+                return;
+            }
+            this.replaceMember.to = null;
+            this.replaceMember.from = member;
+            this.replaceMember.from.groupListKey = groupListKey;
+            this.replaceMember.from.groupKey = groupKey;
+            this.showEditModal = true;
+        },
+        submitEdit: function submitEdit() {
+            var from = this.replaceMember.from;
+            var to = this.replaceMember.to;
+
+            // swap isCoordinator
+            var tmp = to.isCoordinator;
+            to.isCoordinator = from.isCoordinator;
+            from.isCoordinator = tmp;
+
+            this.groupList[from.groupListKey].groupMembers[from.groupKey] = to;
+            this.groupList[to.groupListKey].groupMembers[to.groupKey] = from;
+
+            this.showEditModal = false;
+        },
         resetSearchForm: function resetSearchForm() {
             this.search.groupName = '';
             this.search.employeeName = '';
@@ -33643,7 +33738,81 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [(_vm.groupList.length > 0) ? _c('div', [_c('button', {
+  return _c('div', [(_vm.showEditModal) ? _c('transition', {
+    attrs: {
+      "name": "modal"
+    }
+  }, [_c('div', {
+    staticClass: "modal-mask"
+  }, [_c('div', {
+    staticClass: "modal-wrapper"
+  }, [_c('div', {
+    staticClass: "modal-container"
+  }, [_c('div', {
+    staticClass: "modal-header"
+  }, [_vm._v("\n                        EDIT\n                    ")]), _vm._v(" "), _c('form', {
+    on: {
+      "submit": function($event) {
+        $event.preventDefault();
+        _vm.submitEdit()
+      }
+    }
+  }, [_c('div', {
+    staticClass: "modal-body text-center"
+  }, [_c('strong', [_vm._v(_vm._s(_vm.replaceMember.from.name) + " (" + _vm._s(_vm.replaceMember.from.departmentName) + "/" + _vm._s(_vm.replaceMember.from.positionName) + ")")]), _vm._v(" "), _c('div', [_c('i', {
+    staticClass: "fa fa-arrows-v",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  })]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.replaceMember.to),
+      expression: "replaceMember.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "required": ""
+    },
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.replaceMember.to = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, _vm._l((_vm.getMemberListFromGroupList), function(member) {
+    return _c('option', {
+      attrs: {
+        "disabled": member.id == 'group'
+      },
+      domProps: {
+        "value": member
+      }
+    }, [(member.id == 'group') ? _c('span', [_vm._v("\n                                        _____GROUP: " + _vm._s(member.name) + "_____\n                                    ")]) : _c('span', [_vm._v("\n                                        " + _vm._s(member.name) + "\n                                        (" + _vm._s(member.departmentName) + "/" + _vm._s(member.positionName) + ")\n                                    ")])])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "modal-footer"
+  }, [_c('button', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "type": "submit"
+    }
+  }, [_vm._v("\n                                OK\n                            ")]), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "type": "button"
+    },
+    on: {
+      "click": function($event) {
+        _vm.showEditModal = false
+      }
+    }
+  }, [_vm._v("\n                                Cancel\n                            ")])])])])])])]) : _vm._e(), _vm._v(" "), (_vm.groupList.length > 0) ? _c('div', [_c('button', {
     staticClass: "btn btn-default btn-sm",
     class: [{
       'btn-success': _vm.openSearch
@@ -33761,12 +33930,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v("GROUP: " + _vm._s(group.name))]), _vm._v(" "), _vm._l((group.groupMembers), function(member, groupKey) {
       return _c('li', {
         staticClass: "list-group-item"
-      }, [_vm._v("\n                    " + _vm._s(groupKey + 1) + ". " + _vm._s(member.name) + "\n                    "), _c('strong', [(member.isLeader == 1) ? _c('i', {
+      }, [_vm._v("\n                    " + _vm._s(groupKey + 1) + ". " + _vm._s(member.name) + "\n                    "), _c('strong', [(member.isCoordinator == 1) ? _c('i', {
         staticClass: "fa fa-star-o text-danger faa-vertical animated",
         attrs: {
           "aria-hidden": "true"
         }
-      }) : _vm._e()]), _vm._v("\n                    (" + _vm._s(member.departmentName) + "/" + _vm._s(member.positionName) + ")\n                ")])
+      }) : _vm._e()]), _vm._v("\n                    (" + _vm._s(member.departmentName) + "/" + _vm._s(member.positionName) + ")\n\n                    "), (_vm.canEdit) ? _c('button', {
+        staticClass: "btn btn-link",
+        on: {
+          "click": function($event) {
+            _vm.clickEdit(member, groupListKey, groupKey)
+          }
+        }
+      }, [_vm._m(1, true)]) : _vm._e()])
     })], 2)
   })], 2)]) : (!_vm.yearMonth) ? _c('div', [_c('div', {
     key: "emptyGroupList",
@@ -33774,14 +33950,23 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('p', [_vm._v("Date is not specified.")])])]) : _c('div', [_c('div', {
     key: "emptyGroupList",
     staticClass: "alert alert-warning"
-  }, [_c('p', [_vm._v("The group of this month has not been generated yet.")])])])])
+  }, [_c('p', [_vm._v("The group of this month has not been generated yet.")])])])], 1)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('p', [_c('i', {
     staticClass: "fa fa-star-o text-danger",
     attrs: {
       "aria-hidden": "true"
     }
-  }), _vm._v(": group leader\n            ")])
+  }), _vm._v(": coordinator\n            ")])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', {
+    staticClass: "text-muted"
+  }, [_c('i', {
+    staticClass: "fa fa-pencil",
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }), _vm._v(" edit")])
 }]}
 module.exports.render._withStripped = true
 if (false) {
