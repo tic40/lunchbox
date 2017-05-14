@@ -46,6 +46,10 @@
                     <p slot="header">You have not submitted the generated group yet. Are you sure to back to the group list page?</p>
                 </modal>
 
+                <button type="button" class="btn btn-default pull-right" @click="clickCreateCancel()" :disabled="isLoading">
+                    Back
+                </button>
+
                 <h3>Create Group List For <strong>@{{yearMonth}}</strong></h3>
                 <div class="form-group">
                     <input type="number" id="generate-group-number" max="100" v-model="groupNumber" placeholder="group number" required>
@@ -55,9 +59,6 @@
                     </button>
                     <button v-if="generatedGroupList.length > 0" type="button" class="btn btn-default btn-primary" @click="showCreateConfirmModal = true" :disabled="isLoading">
                         Submit
-                    </button>
-                    <button type="button" class="btn btn-default" @click="clickCreateCancel()" :disabled="isLoading">
-                        Cancel
                     </button>
                 </div>
 

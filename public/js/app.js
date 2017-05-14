@@ -33936,7 +33936,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           "aria-hidden": "true"
         }
       }) : _vm._e()]), _vm._v("\n                    (" + _vm._s(member.departmentName) + "/" + _vm._s(member.positionName) + ")\n\n                    "), (_vm.canEdit) ? _c('button', {
-        staticClass: "btn btn-link",
+        staticClass: "btn btn-link btn-sm pull-right",
         on: {
           "click": function($event) {
             _vm.clickEdit(member, groupListKey, groupKey)
@@ -33962,11 +33962,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('span', {
     staticClass: "text-muted"
   }, [_c('i', {
-    staticClass: "fa fa-pencil",
+    staticClass: "fa fa-exchange",
     attrs: {
       "aria-hidden": "true"
     }
-  }), _vm._v(" edit")])
+  })])
 }]}
 module.exports.render._withStripped = true
 if (false) {

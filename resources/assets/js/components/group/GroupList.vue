@@ -66,8 +66,8 @@
                         <strong><i v-if="member.isCoordinator == 1" class="fa fa-star-o text-danger faa-vertical animated" aria-hidden="true"></i></strong>
                         ({{member.departmentName}}/{{member.positionName}})
 
-                        <button class="btn btn-link" @click="clickEdit(member, groupListKey, groupKey)" v-if="canEdit">
-                            <span class="text-muted"><i class="fa fa-pencil" aria-hidden="true"></i> edit</span>
+                        <button class="btn btn-link btn-sm pull-right" @click="clickEdit(member, groupListKey, groupKey)" v-if="canEdit">
+                            <span class="text-muted"><i class="fa fa-exchange" aria-hidden="true"></i></span>
                         </button>
                     </li>
                 </ul>
