@@ -34,6 +34,7 @@ class EmployeeRepository
         $employee->name = $request['name'];
         $employee->department_id = $request['department_id'];
         $employee->position_id = $request['position_id'];
+        $employee->is_temporary_absence = $request['is_temporary_absence'];
         return $employee->save();
     }
 
@@ -52,6 +53,7 @@ class EmployeeRepository
         $employeeEntity->departmentName = $employee->departments->name;
         $employeeEntity->positionId = $employee->position_id;
         $employeeEntity->positionName = $employee->positions->name;
+        $employeeEntity->isTemporaryAbsence = $employee->is_temporary_absence;
         $employeeEntity->deletedAt = $employee->deleted_at;
         $employeeEntity->createdAt = $employee->created_at;
         $employeeEntity->updatedAt = $employee->updated_at;

@@ -26,6 +26,13 @@
                         </option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="edit-is-temporary-absence">temporary absence</label>
+                    <select class="form-control" id="edit-is-temporary-absence" v-model="employee.isTemporaryAbsence" required>
+                        <option :value="0" :selected="employee.isTemporaryAbsence == 0">not absence</option>
+                        <option :value="1" :selected="employee.isTemporaryAbsence == 1">temporary absence</option>
+                    </select>
+                </div>
 
                 <button type="submit" class="btn btn-default btn-primary" :disabled="isLoading">
                     Submit
@@ -63,7 +70,8 @@
                 updateEmployee(employee.id, {
                     name: employee.name,
                     department_id: employee.departmentId,
-                    position_id: employee.positionId
+                    position_id: employee.positionId,
+                    is_temporary_absence: employee.isTemporaryAbsence
                 })
                 .then(response => {
                     this.$emit('change-view', this.viewType.list)

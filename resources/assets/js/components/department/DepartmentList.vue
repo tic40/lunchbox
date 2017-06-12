@@ -2,9 +2,9 @@
     <div>
         <button v-if="isLogin" type="button" class="pull-right btn btn-success" @click="clickCreate">new department</button>
         <h3>Department List</h3>
-        <div class="form-group">
-            <input type="text" id="searchName" v-model="searchName" placeholder="search name">
-            <button type="text" @click="searchName = ''" class="btn btn-sm btn-default">reset</button>
+        <div class="form-inline">
+            <input type="text" id="searchName" class="form-control" v-model="searchName" placeholder="search name">
+            <button type="text" @click="searchName = ''" class="btn btn-default">reset</button>
         </div>
         <table class="table">
             <thead>
