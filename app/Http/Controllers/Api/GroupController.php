@@ -31,7 +31,7 @@ class GroupController extends Controller
      */
     public function create(int $year, int $month, int $groupNumber)
     {
-        $generateGroup = new GenerateGroup(EmployeeRepository::getEmployees());
+        $generateGroup = new GenerateGroup(EmployeeRepository::getEmployees(true));
         return response()->json(
             $generateGroup->execute($groupNumber, $year, $month)
         );

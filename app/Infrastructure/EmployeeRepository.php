@@ -3,9 +3,11 @@ namespace App\Infrastructure;
 
 class EmployeeRepository
 {
-    public static function getEmployees()
+    public static function getEmployees(bool $onlyActive = false)
     {
-        $employees = \App\employees::all();
+        $employees = $onlyActive === false
+            ? $employees = \App\employees::all()
+            : $employees = \App\employees::where('is_temporary_absence', 0)->get();
         $employeeEntities = [];
         foreach ($employees as $employee) {
             $employeeEntities[] = static::setEmployeeEntity($employee);
