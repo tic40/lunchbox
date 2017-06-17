@@ -2,11 +2,19 @@
     <div>
         <button v-if="isLogin" type="button" class="pull-right btn btn-success" @click="clickCreate">new employee</button>
         <h3>Employee List</h3>
-        <div class="form-group">
-            <input type="text" id="search-name" v-model="search.name" placeholder="search name">
-            <input type="text" id="search-department" v-model="search.department" placeholder="search department">
-            <input type="text" id="search-position" v-model="search.position" placeholder="search position">
-            <button type="button" class="btn btn-default btn-sm" @click="resetSearchForm">reset</button>
+        <div class="form-inline">
+            <input type="text" class="form-control" id="search-name" v-model="search.name" placeholder="search name">
+            <input type="text" class="form-control" id="search-department" v-model="search.department" placeholder="search department">
+            <input type="text" class="form-control" id="search-position" v-model="search.position" placeholder="search position">
+            <!--
+            <select class="form-control" id="search-is-temporary-absence" v-model="search.isTemporaryAbsence">
+                <option :value="null" :selected="search.isTemporaryAbsence == null">--</option>
+                <option :value="0" :selected="search.isTemporaryAbsence == 0">not absence</option>
+
+                <option :value="1" :selected="search.isTemporaryAbsence == 1">temporary absence</option>
+            </select>
+            -->
+            <button type="button" class="btn btn-default btn" @click="resetSearchForm">reset</button>
         </div>
         <table class="table">
             <thead>
@@ -20,7 +28,10 @@
             <tbody>
                 <tr v-for="(employee, index) in listFilter(employees, search.name, search.department, search.position)">
                     <th scope="row" v-text="employee.id"></th>
-                    <td v-text="employee.name"></td>
+                    <td>
+                        {{employee.name}}
+                        <p v-if="employee.isTemporaryAbsence == 1" class="text-danger">(temporary absence)</p>
+                    </td>
                     <td v-text="employee.departmentName"></td>
                     <td v-text="employee.positionName"></td>
                     <td v-if="isLogin">

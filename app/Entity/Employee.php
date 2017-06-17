@@ -9,6 +9,7 @@ class Employee
     public $departmentName;
     public $positionId;
     public $positionName;
+    public $isTemporaryAbsence;
     public $deletedAt;
     public $createdAt;
     public $updatedAt;

@@ -46,13 +46,13 @@
 
         <div v-if="groupList.length > 0">
             <button type="button" class="btn btn-default btn-sm" :class="[{'btn-success' : openSearch}]" @click="openSearch = !openSearch"><i class="fa fa-search" aria-hidden="true"></i></button>
-            <span v-if="openSearch">
-                <input type="text" id="search-group-name" v-model="search.groupName" placeholder="group name">
-                <input type="text" id="search-employee-name" v-model="search.employeeName" placeholder="employee name">
-                <input type="text" id="search-department-name" v-model="search.departmentName" placeholder="department name">
-                <input type="text" id="search-position-name" v-model="search.positionName" placeholder="position name">
-                <button type="button" class="btn btn-default btn-sm" @click="resetSearchForm">reset</button>
-            </span>
+            <div v-if="openSearch" class="form-inline">
+                <input type="text" id="search-group-name" class="form-control" v-model="search.groupName" placeholder="group name">
+                <input type="text" id="search-employee-name" class="form-control" v-model="search.employeeName" placeholder="employee name">
+                <input type="text" id="search-department-name" class="form-control" v-model="search.departmentName" placeholder="department name">
+                <input type="text" id="search-position-name" class="form-control" v-model="search.positionName" placeholder="position name">
+                <button type="button" class="btn btn-default" @click="resetSearchForm">reset</button>
+            </div>
 
             <div>
                 <p>

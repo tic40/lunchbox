@@ -19,6 +19,7 @@ class CreateEmployeesTable extends Migration
             $table->string('name');
             $table->integer('department_id')->references('id')->on('departments');
             $table->integer('position_id')->references('id')->on('positions');
+            $table->boolean('is_temporary_absence')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

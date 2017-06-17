@@ -13096,6 +13096,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -13116,7 +13123,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__api__["p" /* updateEmployee */])(employee.id, {
                 name: employee.name,
                 department_id: employee.departmentId,
-                position_id: employee.positionId
+                position_id: employee.positionId,
+                is_temporary_absence: employee.isTemporaryAbsence
             }).then(function (response) {
                 _this.$emit('change-view', _this.viewType.list);
             });
@@ -13130,6 +13138,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -33830,13 +33849,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "aria-hidden": "true"
     }
-  })]), _vm._v(" "), (_vm.openSearch) ? _c('span', [_c('input', {
+  })]), _vm._v(" "), (_vm.openSearch) ? _c('div', {
+    staticClass: "form-inline"
+  }, [_c('input', {
     directives: [{
       name: "model",
       rawName: "v-model",
       value: (_vm.search.groupName),
       expression: "search.groupName"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "search-group-name",
@@ -33858,6 +33880,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.search.employeeName),
       expression: "search.employeeName"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "search-employee-name",
@@ -33879,6 +33902,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.search.departmentName),
       expression: "search.departmentName"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "search-department-name",
@@ -33900,6 +33924,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.search.positionName),
       expression: "search.positionName"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "search-position-name",
@@ -33915,7 +33940,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default btn-sm",
+    staticClass: "btn btn-default",
     attrs: {
       "type": "button"
     },
@@ -33990,7 +34015,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "click": _vm.clickCreate
     }
   }, [_vm._v("new position")]) : _vm._e(), _vm._v(" "), _c('h3', [_vm._v("Position List")]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
+    staticClass: "form-inline"
   }, [_c('input', {
     directives: [{
       name: "model",
@@ -33998,6 +34023,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.searchName),
       expression: "searchName"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "searchName",
@@ -34013,7 +34039,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-sm btn-default",
+    staticClass: "btn btn-default",
     attrs: {
       "type": "text"
     },
@@ -34407,7 +34433,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "click": _vm.clickCreate
     }
   }, [_vm._v("new employee")]) : _vm._e(), _vm._v(" "), _c('h3', [_vm._v("Employee List")]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
+    staticClass: "form-inline"
   }, [_c('input', {
     directives: [{
       name: "model",
@@ -34415,6 +34441,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.search.name),
       expression: "search.name"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "search-name",
@@ -34436,6 +34463,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.search.department),
       expression: "search.department"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "search-department",
@@ -34457,6 +34485,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.search.position),
       expression: "search.position"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "search-position",
@@ -34472,7 +34501,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-default btn-sm",
+    staticClass: "btn btn-default btn",
     attrs: {
       "type": "button"
     },
@@ -34489,11 +34518,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       domProps: {
         "textContent": _vm._s(employee.id)
       }
-    }), _vm._v(" "), _c('td', {
-      domProps: {
-        "textContent": _vm._s(employee.name)
-      }
-    }), _vm._v(" "), _c('td', {
+    }), _vm._v(" "), _c('td', [_vm._v("\n                    " + _vm._s(employee.name) + "\n                    "), (employee.isTemporaryAbsence == 1) ? _c('p', {
+      staticClass: "text-danger"
+    }, [_vm._v("(temporary absence)")]) : _vm._e()]), _vm._v(" "), _c('td', {
       domProps: {
         "textContent": _vm._s(employee.departmentName)
       }
@@ -34684,7 +34711,46 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "selected": position.id == _vm.employee.positionId
       }
     }, [_vm._v("\n                        " + _vm._s(position.id) + " | " + _vm._s(position.name) + "\n                    ")])
-  }))]), _vm._v(" "), _c('button', {
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "form-group"
+  }, [_c('label', {
+    attrs: {
+      "for": "edit-is-temporary-absence"
+    }
+  }, [_vm._v("temporary absence")]), _vm._v(" "), _c('select', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.employee.isTemporaryAbsence),
+      expression: "employee.isTemporaryAbsence"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "id": "edit-is-temporary-absence",
+      "required": ""
+    },
+    on: {
+      "change": function($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function(o) {
+          return o.selected
+        }).map(function(o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val
+        });
+        _vm.employee.isTemporaryAbsence = $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+      }
+    }
+  }, [_c('option', {
+    domProps: {
+      "value": 0,
+      "selected": _vm.employee.isTemporaryAbsence == 0
+    }
+  }, [_vm._v("not absence")]), _vm._v(" "), _c('option', {
+    domProps: {
+      "value": 1,
+      "selected": _vm.employee.isTemporaryAbsence == 1
+    }
+  }, [_vm._v("temporary absence")])])]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-default btn-primary",
     attrs: {
       "type": "submit",
@@ -34878,7 +34944,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "click": _vm.clickCreate
     }
   }, [_vm._v("new department")]) : _vm._e(), _vm._v(" "), _c('h3', [_vm._v("Department List")]), _vm._v(" "), _c('div', {
-    staticClass: "form-group"
+    staticClass: "form-inline"
   }, [_c('input', {
     directives: [{
       name: "model",
@@ -34886,6 +34952,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       value: (_vm.searchName),
       expression: "searchName"
     }],
+    staticClass: "form-control",
     attrs: {
       "type": "text",
       "id": "searchName",
@@ -34901,7 +34968,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }), _vm._v(" "), _c('button', {
-    staticClass: "btn btn-sm btn-default",
+    staticClass: "btn btn-default",
     attrs: {
       "type": "text"
     },

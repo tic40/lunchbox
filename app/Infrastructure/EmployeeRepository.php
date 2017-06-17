@@ -3,9 +3,11 @@ namespace App\Infrastructure;
 
 class EmployeeRepository
 {
-    public static function getEmployees()
+    public static function getEmployees(bool $onlyActive = false)
     {
-        $employees = \App\employees::all();
+        $employees = $onlyActive === false
+            ? $employees = \App\employees::all()
+            : $employees = \App\employees::where('is_temporary_absence', 0)->get();
         $employeeEntities = [];
         foreach ($employees as $employee) {
             $employeeEntities[] = static::setEmployeeEntity($employee);
@@ -34,6 +36,7 @@ class EmployeeRepository
         $employee->name = $request['name'];
         $employee->department_id = $request['department_id'];
         $employee->position_id = $request['position_id'];
+        $employee->is_temporary_absence = $request['is_temporary_absence'];
         return $employee->save();
     }
 
@@ -52,6 +55,7 @@ class EmployeeRepository
         $employeeEntity->departmentName = $employee->departments->name;
         $employeeEntity->positionId = $employee->position_id;
         $employeeEntity->positionName = $employee->positions->name;
+        $employeeEntity->isTemporaryAbsence = $employee->is_temporary_absence;
         $employeeEntity->deletedAt = $employee->deleted_at;
         $employeeEntity->createdAt = $employee->created_at;
         $employeeEntity->updatedAt = $employee->updated_at;

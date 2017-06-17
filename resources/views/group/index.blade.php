@@ -17,9 +17,9 @@
                 </div>
 
                 <h3>Group List for @{{yearMonth}}</h3>
-                <div class="form-group">
-                    <input id="date" type="month" v-model="yearMonth">
-                    <button type="button" class="btn btn-default btn-sm" @click="yearMonth = getCurrentYearMonth()">this month</button>
+                <div class="form-group form-inline">
+                    <input id="date" class="form-control" type="month" v-model="yearMonth">
+                    <button type="button" class="btn btn-default" @click="yearMonth = getCurrentYearMonth()">this month</button>
                 </div>
 
                 <group-list
@@ -51,8 +51,8 @@
                 </button>
 
                 <h3>Create Group List For <strong>@{{yearMonth}}</strong></h3>
-                <div class="form-group">
-                    <input type="number" id="generate-group-number" max="100" v-model="groupNumber" placeholder="group number" required>
+                <div class="form-group form-inline">
+                    <input type="number" id="generate-group-number" class="form-control" max="100" v-model="groupNumber" placeholder="group number" required>
                     <button type="button" class="btn btn-default btn-success" @click="clickGenerate(getYear, getMonth, groupNumber)" :disabled="isLoading || groupNumber <= 0">
                         <span v-if="generatedGroupList.length > 0">Re-Generate</span>
                         <span v-else>Generate</span>
