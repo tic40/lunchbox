@@ -25,38 +25,47 @@ This APP encourages having lunch between employees in your office!
 ## Installation
 
 composer install
-```bash
+```
 $ composer install
 ```
 
 change permission
-```bash
+```
 $ chmod -R 777 storage
 $ chmod -R 777 bootstrat/cache
 ```
 
 npm install
-```bash
+```
 $ npm install
 ```
 
 create .env file and setup the .env file
-```bash
+```
 $ cp .env.example .env
 ```
 
 generate APP_KEY
-```bash
+```
 $ php artisan key:generate
 ```
 
 db migrate
-```bash
+```
 $ php artisan migrate
 ```
 
+running Mix tasks
+```
+// Run all Mix tasks...
+npm run dev
+
+// Run all Mix tasks and minify output...
+npm run production
+```
+
 run server
-```bash
+```
 $ php artisan serve
 ```
 
