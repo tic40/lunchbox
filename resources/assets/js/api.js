@@ -36,56 +36,56 @@ function destroy(url) {
 }
 
 export function checkAuth() {
-    return fetch('/api/user')
+    return fetch('api/user')
 }
 export function getEmployees() {
-    return fetch('/api/employee/list')
+    return fetch('api/employee/list')
 }
 export function createEmployee(request) {
-    return post('/api/employee', request)
+    return post('api/employee', request)
 }
 export function updateEmployee(id, request) {
-    return put('/api/employee/' + id, request)
+    return put('api/employee/' + id, request)
 }
 export function destroyEmployee(id, request) {
-    return destroy('/api/employee/' + id, request)
+    return destroy('api/employee/' + id, request)
 }
 
 export function getDepartments() {
-    return fetch('/api/department/list')
+    return fetch('api/department/list')
 }
 export function createDepartment(request) {
-    return post('/api/department', request)
+    return post('api/department', request)
 }
 export function updateDepartment(id, request) {
-    return put('/api/department/' + id, request)
+    return put('api/department/' + id, request)
 }
 export function destroyDepartment(id, request) {
-    return destroy('/api/department/' + id, request)
+    return destroy('api/department/' + id, request)
 }
 
 export function getPositions() {
-    return fetch('/api/position/list')
+    return fetch('api/position/list')
 }
 export function createPosition(request) {
-    return post('/api/position', request)
+    return post('api/position', request)
 }
 export function updatePosition(id, request) {
-    return put('/api/position/' + id, request)
+    return put('api/position/' + id, request)
 }
 export function destroyPosition(id, request) {
-    return destroy('/api/position/' + id, request)
+    return destroy('api/position/' + id, request)
 }
 
 export function getGroupList(year, month) {
-    return fetch('/api/group/' + year + '/' + month + '/list')
+    return fetch('api/group/' + year + '/' + month + '/list')
 }
 export function getGenerateGroup(year, month, groupNumber) {
-    return fetch('/api/group/' + year + '/' + month + '/create/' + groupNumber)
+    return fetch('api/group/' + year + '/' + month + '/create/' + groupNumber)
 }
 export function createGroup(year, month, request) {
-    return post('/api/group/' + year + '/' + month, request)
+    return post('api/group/' + year + '/' + month, request)
 }
 export function destroyGroup(year, month) {
-    return destroy('/api/group/' + year + '/' + month)
+    return destroy('api/group/' + year + '/' + month)
 }

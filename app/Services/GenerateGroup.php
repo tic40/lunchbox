@@ -79,7 +79,9 @@ class GenerateGroup
         $matchingData = GroupRepository::getMatchingDataByMonthRange($this->targetDate, self::REFERENCE_MONTH_RANGE);
         foreach ($matchingData as $v) {
             // already matched within REFERENCE_MONTH_RANGE
-            $this->matchingScores[$v->id][$v->pair_id] += self::SCORES['alreadyMatched'];
+            if (isset($this->matchingScores[$v->id][$v->pair_id])) {
+                $this->matchingScores[$v->id][$v->pair_id] += self::SCORES['alreadyMatched'];
+            }
         }
     }
 
