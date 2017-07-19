@@ -16,8 +16,7 @@ class GroupRepository
     public static function getGroupsByTargetDate(int $year, int $month)
     {
         $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
-        $groups = \App\groups::where('target_date', $targetDate->format('Y-m-d'))
-            ->get();
+        $groups = \App\groups::where('target_date', $targetDate)->get();
         $groupEntities = [];
         foreach ($groups as $group) {
             $groupEntities[] = static::setGroupEntity($group);
@@ -98,8 +97,7 @@ class GroupRepository
     public static function deleteGroupsByTargetDate(int $year, int $month)
     {
         $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
-        return \App\groups::where('target_date', $targetDate->format('Y-m-d'))
-            ->delete();
+        return \App\groups::where('target_date', $targetDate)->delete();
     }
 
     private static function setGroupEntity(\App\groups $group)
