@@ -29,8 +29,8 @@
                 <div class="form-group">
                     <label for="edit-is-temporary-absence">temporary absence</label>
                     <select class="form-control" id="edit-is-temporary-absence" v-model="employee.isTemporaryAbsence" required>
-                        <option :value="0" :selected="employee.isTemporaryAbsence == 0">not absence</option>
-                        <option :value="1" :selected="employee.isTemporaryAbsence == 1">temporary absence</option>
+                        <option :value="0" :selected="employee.isTemporaryAbsence == 0">no</option>
+                        <option :value="1" :selected="employee.isTemporaryAbsence == 1">yes</option>
                     </select>
                 </div>
 
