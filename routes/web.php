@@ -33,6 +33,8 @@ Route::get('/group', 'GroupController@index');
 Route::get('/employee', 'EmployeeController@index');
 Route::get('/department', 'DepartmentController@index');
 Route::get('/position', 'PositionController@index');
+Route::get('/password/change', 'Password\ChangeController@index')->middleware('auth');
+Route::put('/password/change', 'Password\ChangeController@update')->middleware('auth');
 
 // api
 Route::get('/api/user', function () {

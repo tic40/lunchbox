@@ -64,13 +64,11 @@
                     <li v-for="(member, groupKey) in group.groupMembers" class="list-group-item">
                         {{groupKey+1}}. {{member.name}}
                         <strong><i v-if="member.isCoordinator == 1" class="fa fa-star-o text-danger faa-vertical animated" aria-hidden="true"></i></strong>
-                        <br />
                         <button class="btn btn-link btn-sm pull-right" @click="clickEdit(member, groupListKey, groupKey)" v-if="canEdit">
                             <span class="text-muted"><i class="fa fa-exchange" aria-hidden="true"></i></span>
                         </button>
-                        <span>
-                            ({{member.departmentName}}/{{member.positionName}})
-                        </span>
+                        <br />
+                        <span>({{member.departmentName}}/{{member.positionName}})</span>
                     </li>
                 </ul>
             </div>
