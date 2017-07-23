@@ -1,11 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            password changed!!
-        </div>
+    <div class="container">
+        <h2>Your password has been changed successfully!</h2>
+        <p>Move to the <a href="{{ url('/')}}" class="alert-link">TOP</a></p>
     </div>
-</div>
 @endsection
