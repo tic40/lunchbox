@@ -6,7 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ChangeController extends Controller
+class ResetController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,10 @@ class ChangeController extends Controller
      */
     public function index()
     {
-        //
-        return view('password/change/index');
+        return view('password/reset/index', [
+            'adminName' => \Config::get('constants.ADMIN_NAME'),
+            'adminContact' => \Config::get('constants.ADMIN_CONTACT'),
+        ]);
     }
 
     /**
@@ -66,25 +68,12 @@ class ChangeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, int $id)
     {
-        $params = $request->all();
-        $user = \Auth::user();
-        $this->validate($request, [
-            'password_current' => 'required|password_current:' . $user->password,
-            'password' => 'required|min:5|max:255',
-            'password_confirmation' => 'required|password_confirmation:' . $params['password'],
-        ]);
-
-        // set new password
-        $user->password = bcrypt($params['password']);
-        if ($user->save() === false) {
-            // error
-            return view('password/change/index', ['error' => 'Failed to change password. Try it again please.']);
-        }
-        return view('password/change/update');
+        //
     }
 
     /**

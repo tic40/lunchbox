@@ -21,11 +21,10 @@ $this->post('logout', 'Auth\LoginController@logout')->name('logout');
 // $this->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 // $this->post('register', 'Auth\RegisterController@register');
 // Password Reset Routes...
-$this->get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-$this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-$this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-$this->post('password/reset', 'Auth\ResetPasswordController@reset');
-
+#$this->get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+#$this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+#$this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+#$this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
 
 Route::get('/', 'IndexController@index');
@@ -33,6 +32,7 @@ Route::get('/group', 'GroupController@index');
 Route::get('/employee', 'EmployeeController@index');
 Route::get('/department', 'DepartmentController@index');
 Route::get('/position', 'PositionController@index');
+Route::get('/password/reset', 'Password\ResetController@index');
 Route::get('/password/change', 'Password\ChangeController@index')->middleware('auth');
 Route::put('/password/change', 'Password\ChangeController@update')->middleware('auth');
 
