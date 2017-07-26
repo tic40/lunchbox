@@ -14,17 +14,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(department, index) in searchByName(departments, searchName)">
+                <tr v-for="department in searchByName(departments, searchName)">
                     <th scope="row" v-text="department.id"></th>
                     <td v-text="department.name"></td>
                     <td v-if="isLogin">
 
-                        <button class="btn btn-link" @click="clickEdit(index)">
+                        <button class="btn btn-link" @click="clickEdit(department)">
                             <span class="text-muted"><i class="fa fa-pencil" aria-hidden="true"></i> edit</span>
                         </button>
 
 <!--
-                        <button class="btn btn-link" @click="clickDelete(index)">
+                        <button class="btn btn-link" @click="clickDelete(department)">
                             <span class="text-muted"><i class="fa fa-close" aria-hidden="true"></i> delete</span>
                         </button>
 -->
@@ -52,12 +52,12 @@
             clickCreate: function() {
                 this.$emit('change-view', this.viewType.create)
             },
-            clickEdit: function(index) {
-                this.$emit('set-selected-department', index)
+            clickEdit: function(department) {
+                this.$emit('set-selected-department', department)
                 this.$emit('change-view', this.viewType.edit)
             },
-            clickDelete: function(index) {
-                this.$emit('set-selected-department', index)
+            clickDelete: function(department) {
+                this.$emit('set-selected-department', department)
                 this.$emit('change-view', this.viewType.delete)
             },
             searchByName: function(employees, str) {

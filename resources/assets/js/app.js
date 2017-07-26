@@ -97,8 +97,8 @@ if (document.querySelector(appIds.employee)) {
             .catch(e => { handleApiError(e) })
         },
         methods: {
-            setSelectedEmployee: function(index) {
-                this.selectedEmployee = this.employees[index]
+            setSelectedEmployee: function(employee) {
+                this.selectedEmployee = employee
             },
             changeView: function(type) {
                 if (type == this.viewType.list) {
@@ -156,8 +156,8 @@ if (document.querySelector(appIds.department)) {
             .catch(e => { handleApiError(e) })
         },
         methods: {
-            setSelectedDepartment: function(index) {
-                this.selectedDepartment = this.departments[index]
+            setSelectedDepartment: function(department) {
+                this.selectedDepartment = department
             },
             changeView: function(type) {
                 if (type == this.viewType.list) {
@@ -216,8 +216,8 @@ if (document.querySelector(appIds.position)) {
             .catch(e => { handleApiError(e) })
         },
         methods: {
-            setSelectedPosition: function(index) {
-                this.selectedPosition = this.positions[index]
+            setSelectedPosition: function(position) {
+                this.selectedPosition = position
             },
             changeView: function(type) {
                 if (type == this.viewType.list) {

@@ -108,12 +108,23 @@ class GroupRepository
         $groupEntity->targetDate = $group->target_date;
         $groupEntity->groupMembers = [];
         foreach ($group->employees as $key => $employee) {
+            $groupMemberKey = $key;
+            $isCoordinator = 0;
+            // better to fix. isCoordinator setting.
+            while ($groupMemberKey < count($group->employees)) {
+                if ($group->group_members[$groupMemberKey]['employee_id'] === $employee['id']) {
+                    $isCoordinator = $group->group_members[$groupMemberKey]['is_coordinator'];
+                    break;
+                }
+                $groupMemberKey++;
+            }
+
             $groupEntity->groupMembers[] = [
                 'id' => $employee['id'],
                 'name' => $employee['name'],
                 'departmentName' => $employee->departments['name'],
                 'positionName' => $employee->positions['name'],
-                'isCoordinator' => $group->group_members[$key]['is_coordinator'],
+                'isCoordinator' => $isCoordinator,
             ];
         }
         return $groupEntity;

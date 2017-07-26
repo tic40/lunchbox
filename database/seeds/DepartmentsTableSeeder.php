@@ -12,12 +12,13 @@ class DepartmentsTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker\Factory::create();
+        $now = \Carbon\Carbon::now();
 
         for ($i = 1; $i <= 15; $i++) {
             DB::table('departments')->insert([
                 'name' => $faker->unique()->colorName,
-                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+                'created_at' => $now,
+                'updated_at' => $now,
             ]);
         }
     }

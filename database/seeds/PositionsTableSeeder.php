@@ -12,12 +12,13 @@ class PositionsTableSeeder extends Seeder
     public function run()
     {
         $faker = Faker\Factory::create();
+        $now = \Carbon\Carbon::now();
 
         for ($i = 1; $i <= 6; $i++) {
             DB::table('positions')->insert([
                 'name' => "G{$i}",
-                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+                'created_at' => $now,
+                'updated_at' => $now,
             ]);
         }
     }
