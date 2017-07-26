@@ -113,7 +113,7 @@ class GroupRepository
                 'name' => $employee['name'],
                 'departmentName' => $employee->departments['name'],
                 'positionName' => $employee->positions['name'],
-                'isCoordinator' => $group->group_members[$key]['is_coordinator'],
+                'isCoordinator' => $employee->group_members['is_coordinator'],
             ];
         }
         return $groupEntity;
