@@ -17,7 +17,7 @@
                                 </div>
 
                                 <select class="form-control" v-model="replaceMember.to" required>
-                                    <option v-for="member in getMemberListFromGroupList" :value="member" :disabled="member.id === 'group' || member.id === replaceMember.from.id">
+                                    <option v-for="member in getMemberListFromGroupList()" :value="member" :disabled="member.id === 'group' || member.id === replaceMember.from.id">
                                         <span v-if="member.id=='group'">
                                             _____GROUP: {{member.name}}_____
                                         </span>
@@ -58,7 +58,7 @@
                 <p>
                     <i class="fa fa-star-o text-danger" aria-hidden="true"></i>: coordinator
                 </p>
-                <ul v-for="(group, groupListKey) in listFilter(groupList, search.groupName, search.employeeName, search.departmentName, search.positionName)" class="list-group col-md-6">
+                <ul v-for="(group, groupListKey) in listFilter(groupList, search.groupName, search.employeeName, search.departmentName, search.positionName)" class="list-group col-md-12">
 
                     <li class="list-group-item disabled">GROUP: {{group.name}}</li>
                     <li v-for="(member, groupKey) in group.groupMembers" class="list-group-item">
@@ -67,8 +67,8 @@
                         <button class="btn btn-link btn-sm pull-right" @click="clickEdit(member, groupListKey, groupKey)" v-if="canEdit">
                             <span class="text-muted"><i class="fa fa-exchange" aria-hidden="true"></i></span>
                         </button>
-                        <br />
                         <span>({{member.departmentName}}/{{member.positionName}})</span>
+                        <div v-if="member.coordinatorCount != undefined">coordinator count last 12 months: {{member.coordinatorCount}} times</div>
                     </li>
                 </ul>
             </div>
@@ -112,7 +112,7 @@
             'yearMonth',
             'canEdit'
         ],
-        computed: {
+        methods: {
             getMemberListFromGroupList: function() {
                 let editList = []
                 this.groupList.forEach( function(group, groupListKey) {
@@ -128,9 +128,7 @@
                     })
                 })
                 return editList
-            }
-        },
-        methods: {
+            },
             clickEdit: function(member, groupListKey, groupKey) {
                 if (!this.canEdit) { return }
                 this.replaceMember.to = null

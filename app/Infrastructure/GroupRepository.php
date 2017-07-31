@@ -53,7 +53,7 @@ class GroupRepository
         );
     }
 
-    public static function getNumberOfCoordinatorByMonthRange(\Carbon\Carbon $targetDate, int $monthRange)
+    public static function getCoordinatorCountByMonthRange(\Carbon\Carbon $targetDate, int $monthRange)
     {
         $to = $targetDate;
         $from = $to->copy()->subMonth($monthRange);

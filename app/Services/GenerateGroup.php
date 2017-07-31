@@ -24,8 +24,6 @@ class GenerateGroup
     protected $groupNumber;
     // @var array matching score for each member
     protected $matchingScores;
-    // @var array how many time each employee become coordinator.
-    protected $numberOfCoordinator;
 
     public function __construct(array $employees)
     {
@@ -57,7 +55,7 @@ class GenerateGroup
         return $sortedGroupList;
     }
 
-    public function calcMatchingScore()
+    public function getMatchingScore()
     {
         $this->matchingScores = [];
         foreach ($this->employees as $key => $employee) {
@@ -87,8 +85,17 @@ class GenerateGroup
 
     public function createGroupList()
     {
-        $this->calcMatchingScore();
-        shuffle($this->employees);
+        $this->getMatchingScore();
+
+        //shuffle($this->employees);
+        // shuffle キーを保持してシャッフル
+        $keys = array_keys($this->employees);
+        shuffle($keys);
+        $ary = [];
+        foreach ($keys as $key) {
+            $ary[$key] = $this->employees[$key];
+        }
+        $this->employees = $ary;
 
         $groupList = [];
         $i = 0;
@@ -131,15 +138,15 @@ class GenerateGroup
 
     public function decideGroupCoordinator(array $groupList)
     {
-        $this->calcNumberOfCoordinator();
+        $this->getCoordinatorCount();
         foreach ($groupList as $groupListKey => $group) {
             $min = null;
             $CoordinatorKey = 0;
             $members = [];
             foreach ($group as $groupKey => $member) {
                 $groupList[$groupListKey][$groupKey]->isCoordinator = 0;
-                if ($min === null || $this->numberOfCoordinator[$member->id] < $min) {
-                    $min = $this->numberOfCoordinator[$member->id];
+                if ($min === null || $this->employees[$member->id]->coordinatorCount < $min) {
+                    $min = $this->employees[$member->id]->coordinatorCount;
                     $CoordinatorKey = $groupKey;
                 }
             }
@@ -151,16 +158,15 @@ class GenerateGroup
         return $groupList;
     }
 
-    public function calcNumberOfCoordinator()
+    public function getCoordinatorCount()
     {
-        $this->numberOfCoordinator = [];
-        foreach ($this->employees as $v) {
-            $this->numberOfCoordinator[$v->id] = 0;
+        foreach ($this->employees as $k => $v) {
+            $this->employees[$k]->coordinatorCount = 0;
         }
 
-        $dataNumberOfCoordinator = groupRepository::getNumberOfCoordinatorByMonthRange($this->targetDate, self::REFERENCE_MONTH_RANGE);
-        foreach ($dataNumberOfCoordinator as $v) {
-            $this->numberOfCoordinator[$v->id] = intval($v->total);
+        $coordinatorCounts = groupRepository::getCoordinatorCountByMonthRange($this->targetDate, self::REFERENCE_MONTH_RANGE);
+        foreach ($coordinatorCounts as $v) {
+            $this->employees[$v->id]->coordinatorCount = intval($v->total);
         }
     }
 
