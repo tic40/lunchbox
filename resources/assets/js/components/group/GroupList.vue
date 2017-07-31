@@ -68,7 +68,7 @@
                             <span class="text-muted"><i class="fa fa-exchange" aria-hidden="true"></i></span>
                         </button>
                         <span>({{member.departmentName}}/{{member.positionName}})</span>
-                        <div v-if="member.coordinatorCount != undefined">coordinator count last 12 months: {{member.coordinatorCount}} times</div>
+                        <div v-if="member.coordinatorCount != undefined">coordinator: {{member.coordinatorCount}} times</div>
                     </li>
                 </ul>
             </div>
