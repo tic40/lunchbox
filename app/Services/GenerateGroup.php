@@ -166,7 +166,9 @@ class GenerateGroup
 
         $coordinatorCounts = groupRepository::getCoordinatorCountByMonthRange($this->targetDate, self::REFERENCE_MONTH_RANGE);
         foreach ($coordinatorCounts as $v) {
-            $this->employees[$v->id]->coordinatorCount = intval($v->total);
+            if (isset($this->employees[$v->id])) {
+                $this->employees[$v->id]->coordinatorCount = intval($v->total);
+            }
         }
     }
 
