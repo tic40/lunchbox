@@ -26,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(employee, index) in listFilter(employees, search.name, search.department, search.position)">
+                <tr v-for="employee in listFilter(employees, search.name, search.department, search.position)">
                     <th scope="row" v-text="employee.id"></th>
                     <td>
                         {{employee.name}}
@@ -36,11 +36,11 @@
                     <td v-text="employee.positionName"></td>
                     <td v-if="isLogin">
 
-                        <button class="btn btn-link" @click="clickEdit(index)">
+                        <button class="btn btn-link" @click="clickEdit(employee)">
                             <span class="text-muted"><i class="fa fa-pencil" aria-hidden="true"></i> edit</span>
                         </button>
 
-                        <button class="btn btn-link" @click="clickDelete(index)">
+                        <button class="btn btn-link" @click="clickDelete(employee)">
                             <span class="text-muted"><i class="fa fa-close" aria-hidden="true"></i> delete</span>
                         </button>
                     </td>
@@ -71,12 +71,12 @@
             clickCreate: function() {
                 this.$emit('change-view', this.viewType.create)
             },
-            clickEdit: function(index) {
-                this.$emit('set-selected-employee', index)
+            clickEdit: function(employee) {
+                this.$emit('set-selected-employee', employee)
                 this.$emit('change-view', this.viewType.edit)
             },
-            clickDelete: function(index) {
-                this.$emit('set-selected-employee', index)
+            clickDelete: function(employee) {
+                this.$emit('set-selected-employee', employee)
                 this.$emit('change-view', this.viewType.delete)
             },
             resetSearchForm: function() {

@@ -14,17 +14,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(position, index) in searchByName(positions, searchName)">
+                <tr v-for="position in searchByName(positions, searchName)">
                     <th scope="row" v-text="position.id"></th>
                     <td v-text="position.name"></td>
                     <td v-if="isLogin">
 
-                        <button class="btn btn-link" @click="clickEdit(index)">
+                        <button class="btn btn-link" @click="clickEdit(position)">
                             <span class="text-muted"><i class="fa fa-pencil" aria-hidden="true"></i> edit</span>
                         </button>
 
 <!--
-                        <button class="btn btn-link" @click="clickDelete(index)">
+                        <button class="btn btn-link" @click="clickDelete(position)">
                             <span class="text-muted"><i class="fa fa-close" aria-hidden="true"></i> delete</span>
                         </button>
 -->
@@ -52,12 +52,12 @@
             clickCreate: function() {
                 this.$emit('change-view', this.viewType.create)
             },
-            clickEdit: function(index) {
-                this.$emit('set-selected-position', index)
+            clickEdit: function(position) {
+                this.$emit('set-selected-position', position)
                 this.$emit('change-view', this.viewType.edit)
             },
-            clickDelete: function(index) {
-                this.$emit('set-selected-position', index)
+            clickDelete: function(position) {
+                this.$emit('set-selected-position', position)
                 this.$emit('change-view', this.viewType.delete)
             },
             searchByName: function(employees, str) {

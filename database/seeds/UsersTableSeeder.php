@@ -11,14 +11,16 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        $now = \Carbon\Carbon::now();
         for ($i = 1; $i <= 10; $i++) {
-            DB::table('users')->insert([
+            $employees[] = [
                 'name' => "test{$i}",
-                'email' => "test{$i}@aa.com",
+                'email' => "test{$i}@example.com",
                 'password' => bcrypt("test{$i}"),
-                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-            ]);
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
         }
+        DB::table('users')->insert($employees);
     }
 }

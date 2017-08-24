@@ -485,58 +485,58 @@ function destroy(url) {
 }
 
 function checkAuth() {
-    return fetch('/api/user');
+    return fetch('api/user');
 }
 function getEmployees() {
-    return fetch('/api/employee/list');
+    return fetch('api/employee/list');
 }
 function createEmployee(request) {
-    return post('/api/employee', request);
+    return post('api/employee', request);
 }
 function updateEmployee(id, request) {
-    return put('/api/employee/' + id, request);
+    return put('api/employee/' + id, request);
 }
 function destroyEmployee(id, request) {
-    return destroy('/api/employee/' + id, request);
+    return destroy('api/employee/' + id, request);
 }
 
 function getDepartments() {
-    return fetch('/api/department/list');
+    return fetch('api/department/list');
 }
 function createDepartment(request) {
-    return post('/api/department', request);
+    return post('api/department', request);
 }
 function updateDepartment(id, request) {
-    return put('/api/department/' + id, request);
+    return put('api/department/' + id, request);
 }
 function destroyDepartment(id, request) {
-    return destroy('/api/department/' + id, request);
+    return destroy('api/department/' + id, request);
 }
 
 function getPositions() {
-    return fetch('/api/position/list');
+    return fetch('api/position/list');
 }
 function createPosition(request) {
-    return post('/api/position', request);
+    return post('api/position', request);
 }
 function updatePosition(id, request) {
-    return put('/api/position/' + id, request);
+    return put('api/position/' + id, request);
 }
 function destroyPosition(id, request) {
-    return destroy('/api/position/' + id, request);
+    return destroy('api/position/' + id, request);
 }
 
 function getGroupList(year, month) {
-    return fetch('/api/group/' + year + '/' + month + '/list');
+    return fetch('api/group/' + year + '/' + month + '/list');
 }
 function getGenerateGroup(year, month, groupNumber) {
-    return fetch('/api/group/' + year + '/' + month + '/create/' + groupNumber);
+    return fetch('api/group/' + year + '/' + month + '/create/' + groupNumber);
 }
 function createGroup(year, month, request) {
-    return post('/api/group/' + year + '/' + month, request);
+    return post('api/group/' + year + '/' + month, request);
 }
 function destroyGroup(year, month) {
-    return destroy('/api/group/' + year + '/' + month);
+    return destroy('api/group/' + year + '/' + month);
 }
 
 /***/ }),
@@ -11504,8 +11504,8 @@ if (document.querySelector(appIds.employee)) {
             });
         },
         methods: {
-            setSelectedEmployee: function setSelectedEmployee(index) {
-                this.selectedEmployee = this.employees[index];
+            setSelectedEmployee: function setSelectedEmployee(employee) {
+                this.selectedEmployee = employee;
             },
             changeView: function changeView(type) {
                 var _this2 = this;
@@ -11564,8 +11564,8 @@ if (document.querySelector(appIds.department)) {
             });
         },
         methods: {
-            setSelectedDepartment: function setSelectedDepartment(index) {
-                this.selectedDepartment = this.departments[index];
+            setSelectedDepartment: function setSelectedDepartment(department) {
+                this.selectedDepartment = department;
             },
             changeView: function changeView(type) {
                 var _this4 = this;
@@ -11624,8 +11624,8 @@ if (document.querySelector(appIds.position)) {
             });
         },
         methods: {
-            setSelectedPosition: function setSelectedPosition(index) {
-                this.selectedPosition = this.positions[index];
+            setSelectedPosition: function setSelectedPosition(position) {
+                this.selectedPosition = position;
             },
             changeView: function changeView(type) {
                 var _this6 = this;
@@ -12896,12 +12896,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         clickCreate: function clickCreate() {
             this.$emit('change-view', this.viewType.create);
         },
-        clickEdit: function clickEdit(index) {
-            this.$emit('set-selected-department', index);
+        clickEdit: function clickEdit(department) {
+            this.$emit('set-selected-department', department);
             this.$emit('change-view', this.viewType.edit);
         },
-        clickDelete: function clickDelete(index) {
-            this.$emit('set-selected-department', index);
+        clickDelete: function clickDelete(department) {
+            this.$emit('set-selected-department', department);
             this.$emit('change-view', this.viewType.delete);
         },
         searchByName: function searchByName(employees, str) {
@@ -13207,12 +13207,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         clickCreate: function clickCreate() {
             this.$emit('change-view', this.viewType.create);
         },
-        clickEdit: function clickEdit(index) {
-            this.$emit('set-selected-employee', index);
+        clickEdit: function clickEdit(employee) {
+            this.$emit('set-selected-employee', employee);
             this.$emit('change-view', this.viewType.edit);
         },
-        clickDelete: function clickDelete(index) {
-            this.$emit('set-selected-employee', index);
+        clickDelete: function clickDelete(employee) {
+            this.$emit('set-selected-employee', employee);
             this.$emit('change-view', this.viewType.delete);
         },
         resetSearchForm: function resetSearchForm() {
@@ -13634,12 +13634,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         clickCreate: function clickCreate() {
             this.$emit('change-view', this.viewType.create);
         },
-        clickEdit: function clickEdit(index) {
-            this.$emit('set-selected-position', index);
+        clickEdit: function clickEdit(position) {
+            this.$emit('set-selected-position', position);
             this.$emit('change-view', this.viewType.edit);
         },
-        clickDelete: function clickDelete(index) {
-            this.$emit('set-selected-position', index);
+        clickDelete: function clickDelete(position) {
+            this.$emit('set-selected-position', position);
             this.$emit('change-view', this.viewType.delete);
         },
         searchByName: function searchByName(employees, str) {
@@ -33960,14 +33960,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         attrs: {
           "aria-hidden": "true"
         }
-      }) : _vm._e()]), _vm._v("\n                    (" + _vm._s(member.departmentName) + "/" + _vm._s(member.positionName) + ")\n\n                    "), (_vm.canEdit) ? _c('button', {
+      }) : _vm._e()]), _vm._v(" "), (_vm.canEdit) ? _c('button', {
         staticClass: "btn btn-link btn-sm pull-right",
         on: {
           "click": function($event) {
             _vm.clickEdit(member, groupListKey, groupKey)
           }
         }
-      }, [_vm._m(1, true)]) : _vm._e()])
+      }, [_vm._m(1, true)]) : _vm._e(), _vm._v(" "), _c('br'), _vm._v(" "), _c('span', [_vm._v("(" + _vm._s(member.departmentName) + "/" + _vm._s(member.positionName) + ")")])])
     })], 2)
   })], 2)]) : (!_vm.yearMonth) ? _c('div', [_c('div', {
     key: "emptyGroupList",
@@ -34050,7 +34050,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("reset")])]), _vm._v(" "), _c('table', {
     staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.searchByName(_vm.positions, _vm.searchName)), function(position, index) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.searchByName(_vm.positions, _vm.searchName)), function(position) {
     return _c('tr', [_c('th', {
       attrs: {
         "scope": "row"
@@ -34066,7 +34066,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "btn btn-link",
       on: {
         "click": function($event) {
-          _vm.clickEdit(index)
+          _vm.clickEdit(position)
         }
       }
     }, [_vm._m(1, true)])]) : _vm._e()])
@@ -34510,7 +34510,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("reset")])]), _vm._v(" "), _c('table', {
     staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.listFilter(_vm.employees, _vm.search.name, _vm.search.department, _vm.search.position)), function(employee, index) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.listFilter(_vm.employees, _vm.search.name, _vm.search.department, _vm.search.position)), function(employee) {
     return _c('tr', [_c('th', {
       attrs: {
         "scope": "row"
@@ -34532,14 +34532,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "btn btn-link",
       on: {
         "click": function($event) {
-          _vm.clickEdit(index)
+          _vm.clickEdit(employee)
         }
       }
     }, [_vm._m(1, true)]), _vm._v(" "), _c('button', {
       staticClass: "btn btn-link",
       on: {
         "click": function($event) {
-          _vm.clickDelete(index)
+          _vm.clickDelete(employee)
         }
       }
     }, [_vm._m(2, true)])]) : _vm._e()])
@@ -34745,12 +34745,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": 0,
       "selected": _vm.employee.isTemporaryAbsence == 0
     }
-  }, [_vm._v("not absence")]), _vm._v(" "), _c('option', {
+  }, [_vm._v("no")]), _vm._v(" "), _c('option', {
     domProps: {
       "value": 1,
       "selected": _vm.employee.isTemporaryAbsence == 1
     }
-  }, [_vm._v("temporary absence")])])]), _vm._v(" "), _c('button', {
+  }, [_vm._v("yes")])])]), _vm._v(" "), _c('button', {
     staticClass: "btn btn-default btn-primary",
     attrs: {
       "type": "submit",
@@ -34979,7 +34979,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("reset")])]), _vm._v(" "), _c('table', {
     staticClass: "table"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.searchByName(_vm.departments, _vm.searchName)), function(department, index) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((_vm.searchByName(_vm.departments, _vm.searchName)), function(department) {
     return _c('tr', [_c('th', {
       attrs: {
         "scope": "row"
@@ -34995,7 +34995,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "btn btn-link",
       on: {
         "click": function($event) {
-          _vm.clickEdit(index)
+          _vm.clickEdit(department)
         }
       }
     }, [_vm._m(1, true)])]) : _vm._e()])

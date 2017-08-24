@@ -85,6 +85,8 @@ return [
     'unique'               => 'The :attribute has already been taken.',
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
+    'password_current'     => 'Current password is incorrect.',
+    'password_confirmation' => 'Confirm password does not match the password.',
 
     /*
     |--------------------------------------------------------------------------

@@ -15,9 +15,8 @@ class GroupRepository
 
     public static function getGroupsByTargetDate(int $year, int $month)
     {
-        $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
-        $groups = \App\groups::where('target_date', $targetDate->format('Y-m-d'))
-            ->get();
+        $targetDate = (\Carbon\Carbon::now())->setDateTime($year, $month, 1, 0, 0, 0);
+        $groups = \App\groups::where('target_date', $targetDate)->get();
         $groupEntities = [];
         foreach ($groups as $group) {
             $groupEntities[] = static::setGroupEntity($group);
@@ -54,7 +53,7 @@ class GroupRepository
         );
     }
 
-    public static function getNumberOfCoordinatorByMonthRange(\Carbon\Carbon $targetDate, int $monthRange)
+    public static function getCoordinatorCountByMonthRange(\Carbon\Carbon $targetDate, int $monthRange)
     {
         $to = $targetDate;
         $from = $to->copy()->subMonth($monthRange);
@@ -82,7 +81,7 @@ class GroupRepository
 
     public static function storeGroups(int $year, int $month, array $groupList)
     {
-        $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
+        $targetDate = (\Carbon\Carbon::now())->setDateTime($year, $month, 1, 0, 0, 0);
         $insertion = [];
         foreach ($groupList as $v) {
             $insertion[] = [
@@ -97,9 +96,8 @@ class GroupRepository
 
     public static function deleteGroupsByTargetDate(int $year, int $month)
     {
-        $targetDate = \Carbon\Carbon::create($year, $month)->firstOfMonth();
-        return \App\groups::where('target_date', $targetDate->format('Y-m-d'))
-            ->delete();
+        $targetDate = (\Carbon\Carbon::now())->setDateTime($year, $month, 1, 0, 0, 0);
+        return \App\groups::where('target_date', $targetDate)->delete();
     }
 
     private static function setGroupEntity(\App\groups $group)
@@ -110,12 +108,23 @@ class GroupRepository
         $groupEntity->targetDate = $group->target_date;
         $groupEntity->groupMembers = [];
         foreach ($group->employees as $key => $employee) {
+            $groupMemberKey = $key;
+            $isCoordinator = 0;
+            // better to fix. isCoordinator setting.
+            while ($groupMemberKey < count($group->employees)) {
+                if ($group->group_members[$groupMemberKey]['employee_id'] === $employee['id']) {
+                    $isCoordinator = $group->group_members[$groupMemberKey]['is_coordinator'];
+                    break;
+                }
+                $groupMemberKey++;
+            }
+
             $groupEntity->groupMembers[] = [
                 'id' => $employee['id'],
                 'name' => $employee['name'],
                 'departmentName' => $employee->departments['name'],
                 'positionName' => $employee->positions['name'],
-                'isCoordinator' => $group->group_members[$key]['is_coordinator'],
+                'isCoordinator' => $isCoordinator,
             ];
         }
         return $groupEntity;

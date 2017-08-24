@@ -49,6 +49,9 @@
 
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
+                                        <a href="{{ url('password/change') }}">
+                                            Password
+                                        </a>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
