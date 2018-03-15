@@ -12,7 +12,7 @@ This APP encourages having lunch between employees in your office!
 
 ## Requirement
 * PHP >= 7.0
-* Node.js
+* Node.js v6.x
 * OpenSSL PHP Extension
 * PDO PHP Extension
 * Mbstring PHP Extension
@@ -22,55 +22,38 @@ This APP encourages having lunch between employees in your office!
     * server side FW: Laravel v5.4
     * frontend FW: Vue.js v2.1
 
-## Installation
+## Getting started for dev
 
-composer install
+create container via docker
 ```
-$ composer install
-```
-
-change permission
-```
-$ chmod -R 777 storage
-$ chmod -R 777 bootstrap/cache
+$ docker-compose up
 ```
 
-npm install
 ```
-$ npm install
-```
-
-create .env file and setup the .env file
-```
-$ cp .env.example .env
+# setup dev env
+$ docker exec -it lunchbox_web_1 /app/setup-dev.sh
+# start dev server
+$ docker exec -it lunchbox_web_1 /app/start-dev-server.sh
 ```
 
-generate APP_KEY
+check app via browser
 ```
-$ php artisan key:generate
+http://localhost:8080
 ```
 
-db migrate
+set test data
 ```
-$ php artisan migrate
+$ docker exec lunchbox_web_1 php artisan db:seed
 ```
 
 running Mix tasks
 ```
 // Run all Mix tasks...
-npm run dev
+$ npm run dev
 
 // Run all Mix tasks and minify output...
-npm run production
+$ npm run production
 ```
-
-run server
-```
-$ php artisan serve
-```
-
-refer to the [Laravel 5.4 Installation](https://laravel.com/docs/5.4/installation)
-
 
 ## Learning Laravel
 * [Laravel documentation](https://laravel.com/docs)
