@@ -1,5 +1,7 @@
 # Lunchbox
 
+![lunchbox image](https://github.com/tic40/lunchbox/blob/master/public/images/lunch_bg.jpg)
+
 ## Overview
 This APP encourages having lunch between employees in your office!
 
